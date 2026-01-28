@@ -68,11 +68,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Global rate limiting (relaxed for development/testing)
-app.use('/api/', rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000 // Increased for development with React Strict Mode
-}));
+// Rate limiting disabled for test automation app
+// app.use('/api/', rateLimit({
+//   windowMs: 15 * 60 * 1000,
+//   max: 1000
+// }));
 
 // API Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
@@ -96,7 +96,7 @@ app.get('/health', (req, res) => {
 });
 
 // Routes
-app.use('/api/auth', authRateLimit, authRoutes);
+app.use('/api/auth', authRoutes); // Rate limiting disabled for testing
 app.use('/api/movies', moviesRoutes);
 app.use('/api/movies', authenticateToken, reviewsRoutes);
 app.use('/api/reviews', authenticateToken, reviewsRoutes);

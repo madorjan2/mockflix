@@ -77,6 +77,14 @@ class ApiClient {
     return this.request('/auth/logout', { method: 'POST' });
   }
 
+  async upgradeToPremiun() {
+    return this.request('/auth/upgrade', { method: 'POST' });
+  }
+
+  async downgradeToFree() {
+    return this.request('/auth/downgrade', { method: 'POST' });
+  }
+
   // Movies endpoints
   async getMovies(params = {}) {
     const queryString = new URLSearchParams(params).toString();

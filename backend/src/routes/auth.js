@@ -243,4 +243,138 @@ router.post('/logout', (req, res) => {
   });
 });
 
+/**
+ * @swagger
+ * /api/auth/upgrade:
+ *   post:
+ *     summary: Upgrade user to premium (mock)
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User upgraded to premium
+ *       401:
+ *         description: Not authenticated
+ *       409:
+ *         description: Already premium
+ */
+router.post('/upgrade', (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      error: 'Unauthorized',
+      message: 'Not authenticated'
+    });
+  }
+
+  // Get current user
+  const user = queryOne(
+    'SELECT id, email, username, subscription_tier FROM users WHERE id = ?',
+    [req.user.id]
+  );
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      error: 'NotFound',
+      message: 'User not found'
+    });
+  }
+
+  // Check if already premium
+  if (user.subscription_tier === 'premium') {
+    return res.status(409).json({
+      success: false,
+      error: 'Conflict',
+      message: 'User is already premium'
+    });
+  }
+
+  // Upgrade to premium (mock - instant upgrade)
+  run(
+    'UPDATE users SET subscription_tier = ? WHERE id = ?',
+    ['premium', req.user.id]
+  );
+
+  // Get updated user
+  const updatedUser = queryOne(
+    'SELECT id, email, username, subscription_tier, created_at FROM users WHERE id = ?',
+    [req.user.id]
+  );
+
+  res.json({
+    success: true,
+    message: 'Successfully upgraded to premium! 🎉',
+    data: updatedUser
+  });
+});
+
+/**
+ * @swagger
+ * /api/auth/downgrade:
+ *   post:
+ *     summary: Downgrade user to free (mock)
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User downgraded to free
+ *       401:
+ *         description: Not authenticated
+ *       409:
+ *         description: Already free
+ */
+router.post('/downgrade', (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      error: 'Unauthorized',
+      message: 'Not authenticated'
+    });
+  }
+
+  // Get current user
+  const user = queryOne(
+    'SELECT id, subscription_tier FROM users WHERE id = ?',
+    [req.user.id]
+  );
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      error: 'NotFound',
+      message: 'User not found'
+    });
+  }
+
+  // Check if already free
+  if (user.subscription_tier === 'free') {
+    return res.status(409).json({
+      success: false,
+      error: 'Conflict',
+      message: 'User is already on free tier'
+    });
+  }
+
+  // Downgrade to free
+  run(
+    'UPDATE users SET subscription_tier = ? WHERE id = ?',
+    ['free', req.user.id]
+  );
+
+  // Get updated user
+  const updatedUser = queryOne(
+    'SELECT id, email, username, subscription_tier, created_at FROM users WHERE id = ?',
+    [req.user.id]
+  );
+
+  res.json({
+    success: true,
+    message: 'Downgraded to free tier',
+    data: updatedUser
+  });
+});
+
 export default router;

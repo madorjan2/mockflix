@@ -11,6 +11,9 @@ const Profile = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('watchlist');
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [showDowngradeModal, setShowDowngradeModal] = useState(false);
+  const [subscriptionLoading, setSubscriptionLoading] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -45,6 +48,36 @@ const Profile = () => {
     }
   };
 
+  const handleUpgrade = async () => {
+    setSubscriptionLoading(true);
+    try {
+      await api.upgradeToPremiun();
+      // Refresh page to get updated user data
+      window.location.reload();
+    } catch (err) {
+      console.error('Failed to upgrade:', err);
+      alert(err.message || 'Failed to upgrade subscription');
+    } finally {
+      setSubscriptionLoading(false);
+      setShowUpgradeModal(false);
+    }
+  };
+
+  const handleDowngrade = async () => {
+    setSubscriptionLoading(true);
+    try {
+      await api.downgradeToFree();
+      // Refresh page to get updated user data
+      window.location.reload();
+    } catch (err) {
+      console.error('Failed to downgrade:', err);
+      alert(err.message || 'Failed to downgrade subscription');
+    } finally {
+      setSubscriptionLoading(false);
+      setShowDowngradeModal(false);
+    }
+  };
+
   if (loading) {
     return <div className="loading">Loading profile...</div>;
   }
@@ -59,13 +92,37 @@ const Profile = () => {
           <div className="profile-info">
             <h1 className="profile-name" data-testid="profile-username">
               {user?.username}
+              {user?.subscription_tier === 'premium' && (
+                <span className="premium-badge" title="Premium Member">⭐</span>
+              )}
             </h1>
             <p className="profile-email" data-testid="profile-email">
               {user?.email}
             </p>
             <p className="profile-tier" data-testid="profile-tier">
-              Subscription: <span className="tier-badge">{user?.subscription_tier || 'free'}</span>
+              Subscription: <span className={`tier-badge ${user?.subscription_tier}`}>
+                {user?.subscription_tier === 'premium' ? '⭐ Premium' : 'Free'}
+              </span>
             </p>
+            <div className="subscription-actions">
+              {user?.subscription_tier === 'free' ? (
+                <button
+                  className="btn btn-upgrade"
+                  onClick={() => setShowUpgradeModal(true)}
+                  data-testid="upgrade-button"
+                >
+                  ⭐ Upgrade to Premium
+                </button>
+              ) : (
+                <button
+                  className="btn btn-downgrade"
+                  onClick={() => setShowDowngradeModal(true)}
+                  data-testid="downgrade-button"
+                >
+                  Downgrade to Free
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -155,6 +212,84 @@ const Profile = () => {
             </div>
           )}
         </div>
+
+        {/* Upgrade Modal */}
+        {showUpgradeModal && (
+          <div className="modal-overlay" onClick={() => setShowUpgradeModal(false)}>
+            <div className="modal" onClick={(e) => e.stopPropagation()} data-testid="upgrade-modal">
+              <h2>Upgrade to Premium</h2>
+              <div className="premium-features">
+                <p><strong>Premium benefits:</strong></p>
+                <ul>
+                  <li>⭐ Premium badge on your profile</li>
+                  <li>🎬 Priority access to new releases</li>
+                  <li>📺 Ad-free streaming experience</li>
+                  <li>💎 Exclusive content access</li>
+                  <li>🏆 Enhanced recommendations</li>
+                </ul>
+                <p className="mock-notice">
+                  <em>Note: This is a mock upgrade - no payment required!</em>
+                </p>
+              </div>
+              <div className="modal-actions">
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setShowUpgradeModal(false)}
+                  disabled={subscriptionLoading}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="btn btn-upgrade"
+                  onClick={handleUpgrade}
+                  disabled={subscriptionLoading}
+                  data-testid="confirm-upgrade"
+                >
+                  {subscriptionLoading ? 'Upgrading...' : '⭐ Upgrade Now'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Downgrade Modal */}
+        {showDowngradeModal && (
+          <div className="modal-overlay" onClick={() => setShowDowngradeModal(false)}>
+            <div className="modal" onClick={(e) => e.stopPropagation()} data-testid="downgrade-modal">
+              <h2>Downgrade to Free</h2>
+              <div className="downgrade-warning">
+                <p><strong>You will lose:</strong></p>
+                <ul>
+                  <li>⭐ Premium badge</li>
+                  <li>🎬 Priority access to new releases</li>
+                  <li>📺 Ad-free experience</li>
+                  <li>💎 Exclusive content</li>
+                  <li>🏆 Enhanced recommendations</li>
+                </ul>
+                <p className="mock-notice">
+                  <em>Don't worry - you can upgrade again anytime!</em>
+                </p>
+              </div>
+              <div className="modal-actions">
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setShowDowngradeModal(false)}
+                  disabled={subscriptionLoading}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="btn btn-downgrade"
+                  onClick={handleDowngrade}
+                  disabled={subscriptionLoading}
+                  data-testid="confirm-downgrade"
+                >
+                  {subscriptionLoading ? 'Downgrading...' : 'Downgrade'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

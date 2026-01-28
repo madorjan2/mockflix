@@ -29,6 +29,19 @@
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.premium-badge {
+  font-size: 1.5rem;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
 .profile-email {
@@ -44,12 +57,138 @@
 .tier-badge {
   display: inline-block;
   padding: 0.25rem 0.75rem;
-  background-color: var(--primary-color);
   color: white;
   border-radius: 20px;
   font-weight: 600;
   text-transform: capitalize;
-  margin-left: 0.5rem;
+}
+
+.tier-badge.premium {
+  background: linear-gradient(135deg, #ffd700, #ff8c00);
+}
+
+.tier-badge.free {
+  background-color: var(--primary-color);
+}
+
+.subscription-actions {
+  margin-top: 1rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.btn-upgrade {
+  background: linear-gradient(135deg, #ffd700, #ff8c00);
+  color: #000;
+}
+
+.btn-upgrade:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+}
+
+.btn-upgrade:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-downgrade {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-downgrade:hover {
+  background-color: #c82333;
+}
+
+.btn-downgrade:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: var(--bg-light);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-dark);
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal {
+  background-color: var(--bg-light);
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modal h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+}
+
+.premium-features,
+.downgrade-warning {
+  margin-bottom: 2rem;
+}
+
+.premium-features ul,
+.downgrade-warning ul {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.premium-features li,
+.downgrade-warning li {
+  padding: 0.5rem 0;
+  padding-left: 0.5rem;
+}
+
+.mock-notice {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: rgba(99, 102, 241, 0.1);
+  border-left: 3px solid var(--primary-color);
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.modal-actions .btn {
+  min-width: 120px;
 }
 
 .profile-tabs {

@@ -39,8 +39,11 @@ const Navbar = () => {
           <div className="navbar-actions">
             {isAuthenticated ? (
               <>
-                <Link to="/profile" className="nav-link" data-testid="profile-link">
+                <Link to="/profile" className="nav-link user-profile-link" data-testid="profile-link">
                   {user?.username || 'Profile'}
+                  {user?.subscription_tier === 'premium' && (
+                    <span className="premium-indicator" title="Premium Member">⭐</span>
+                  )}
                 </Link>
                 <button
                   onClick={handleLogout}
