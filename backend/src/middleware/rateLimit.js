@@ -50,11 +50,11 @@ export function rateLimit(options = {}) {
 }
 
 /**
- * Strict rate limit for authentication endpoints
+ * Strict rate limit for authentication endpoints (relaxed for development)
  */
 export const authRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // 5 requests
+  max: 100, // Increased for development testing
   message: 'Too many authentication attempts, please try again later'
 });
 
