@@ -119,6 +119,11 @@ This is a dummy streaming platform application (similar to Netflix/IMDb) built s
 - `PUT /api/users/:id/promote` - Promote to admin (200, 403, 404, 409)
 - `PUT /api/users/:id/demote` - Demote from admin (200, 403, 404, 409)
 
+### Database Reset (Admin Only)
+- `POST /api/seed/reset` - Reset entire database to default (200, 403, 500)
+- `POST /api/seed/reset-users` - Reset only users table (200, 403, 500)
+- `POST /api/seed/reset-movies` - Reset only movies table (200, 403, 500)
+
 ### Network/Error Simulation Endpoints
 - `GET /api/test/slow?delay=ms` - Simulate slow response (200)
 - `GET /api/test/timeout` - Simulate timeout (503)
@@ -140,6 +145,10 @@ This is a dummy streaming platform application (similar to Netflix/IMDb) built s
 - ✅ Request/response headers validation
 - ✅ JSON schema validation
 - ✅ Subscription tier changes (upgrade/downgrade)
+- ✅ Admin role-based access control
+- ✅ User banning/unbanning flows
+- ✅ User promotion/demotion
+- ✅ Database reset operations (full/partial)
 
 ### UI Testing Scenarios
 - ✅ Form interactions (registration, login, search, reviews)
@@ -155,6 +164,11 @@ This is a dummy streaming platform application (similar to Netflix/IMDb) built s
 - ✅ Protected routes (authentication required)
 - ✅ Subscription tier indicators (premium badges, stars)
 - ✅ Mock payment flow (upgrade/downgrade)
+- ✅ Admin dashboard access (role-based routing)
+- ✅ Admin user management table (ban/unban/promote/demote)
+- ✅ Admin movie management table (view/add/delete)
+- ✅ Database reset buttons (users only/movies only/full reset)
+- ✅ Confirmation dialogs for destructive actions
 
 ## Code Quality Guidelines
 
@@ -289,14 +303,16 @@ streaming-platform/
 
 ## Implementation Status
 
-### ✅ Completed: Full-Stack Application
+### ✅ Completed: Full-Stack Application with Admin Dashboard
 
 **Backend:**
-- Full REST API with 35+ endpoints
+- Full REST API with 40+ endpoints
 - JWT authentication and authorization
 - Role-based access control (user/admin)
-- Admin endpoints for user and movie management
-- User banning system
+- Admin endpoints for user management (ban/unban/promote/demote)
+- Admin endpoints for movie CRUD operations
+- Database reset endpoints (full/users only/movies only)
+- User banning system (403 on login)
 - SQLite database with sql.js (cross-platform)
 - Database seeding with sample data (5 users, 20 movies)
 - Error handling and network simulation endpoints
@@ -314,7 +330,19 @@ streaming-platform/
 - YouTube video player integration (/watch route)
 - Watchlist and watch history
 - Profile page with subscription management
-- Admin dashboard with user and movie management
+- **Admin dashboard** (`/admin` route) with:
+  - User Management tab:
+    - Table showing all users with role, subscription, status
+    - Ban/Unban buttons (cannot ban admins)
+    - Promote/Demote buttons (cannot demote self)
+    - Reset Users button (resets to 5 defaults)
+    - Reset All button (full database reset)
+  - Movie Management tab:
+    - Table showing all movies with posters, details
+    - Add Movie modal with complete form
+    - Delete Movie button for each movie
+    - Reset Movies button (resets to 20 defaults)
+    - Reset All button (full database reset)
 - Role-based UI rendering (admin-only sections)
 - Premium tier indicators (badges, stars, shimmer effects)
 - Modal dialogs for subscription and admin actions
@@ -352,11 +380,17 @@ The admin account has full access to the admin dashboard for user management and
 - **Subscription management** is fully functional but mock (no real payments)
 - **Admin role** system with requireAdmin middleware - admins cannot be banned
 - **User banning** prevents login (403 Forbidden response)
+- **Admin dashboard** accessible at /admin route - shows user and movie management tables
+- **Database reset functionality** with three options:
+  - POST /api/seed/reset - Full reset (runs complete seed script)
+  - POST /api/seed/reset-users - Users only (preserves movies)
+  - POST /api/seed/reset-movies - Movies only (preserves users)
 - All components include **data-testid** attributes for automation testing
 - **Premium indicators** appear in navbar and profile page (gold badges, stars, shimmer animations)
-- **Admin dashboard** accessible at /admin route - shows user table with ban/promote/demote actions
 - Sample users in seed data span both free/premium tiers and user/admin roles
 - Database automatically resets when running `npm run seed`
+- **Admin authentication chain**: authenticateToken → requireAdmin → endpoint handler
+- Movie creation defaults to rating 0 if not specified (will appear at bottom when sorted by rating)
 
 ## What NOT to Do
 

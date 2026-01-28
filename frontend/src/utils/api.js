@@ -225,6 +225,25 @@ class ApiClient {
       body: JSON.stringify({ progress_seconds: progressSeconds, completed }),
     });
   }
+
+  // Admin seed/reset endpoints
+  async resetDatabase() {
+    return this.request('/seed/reset', {
+      method: 'POST',
+    });
+  }
+
+  async resetUsers() {
+    return this.request('/seed/reset-users', {
+      method: 'POST',
+    });
+  }
+
+  async resetMovies() {
+    return this.request('/seed/reset-movies', {
+      method: 'POST',
+    });
+  }
 }
 
 export default new ApiClient();

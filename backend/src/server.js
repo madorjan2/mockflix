@@ -16,6 +16,7 @@ import watchlistRoutes from './routes/watchlist.js';
 import historyRoutes from './routes/history.js';
 import testRoutes from './routes/test.js';
 import usersRoutes from './routes/users.js';
+import seedRoutes from './routes/seed.js';
 
 // Load environment variables
 dotenv.config();
@@ -106,6 +107,7 @@ app.use('/api/watchlist', authenticateToken, watchlistRoutes);
 app.use('/api/history', authenticateToken, historyRoutes);
 app.use('/api/users', authenticateToken, usersRoutes);
 app.use('/api/test', testRoutes);
+app.use('/api/seed', seedRoutes);
 
 // 404 handler
 app.use(notFoundHandler);

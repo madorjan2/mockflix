@@ -137,6 +137,80 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleResetDatabase = async () => {
+    const confirmed = confirm(
+      '⚠️ WARNING: This will reset the ENTIRE database to its default state.\n\n' +
+      'All current data will be lost, including:\n' +
+      '- All users (except default test accounts)\n' +
+      '- All movies (reset to 20 default movies)\n' +
+      '- All reviews, watchlists, and history\n\n' +
+      'Are you absolutely sure you want to continue?'
+    );
+    
+    if (!confirmed) return;
+
+    try {
+      setLoading(true);
+      await api.resetDatabase();
+      alert('✅ Database reset successfully!\n\nPlease log out and log in again with fresh credentials.');
+      await loadData();
+    } catch (err) {
+      alert('Failed to reset database: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetUsers = async () => {
+    const confirmed = confirm(
+      '⚠️ WARNING: This will reset all USERS to default state.\n\n' +
+      'This will:\n' +
+      '- Delete all current users\n' +
+      '- Restore 5 default test accounts\n' +
+      '- Clear all reviews, watchlists, and history\n\n' +
+      'Movies will NOT be affected.\n\n' +
+      'Continue?'
+    );
+    
+    if (!confirmed) return;
+
+    try {
+      setLoading(true);
+      await api.resetUsers();
+      alert('✅ Users reset successfully!\n\nYou may need to log in again.');
+      await loadData();
+    } catch (err) {
+      alert('Failed to reset users: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetMovies = async () => {
+    const confirmed = confirm(
+      '⚠️ WARNING: This will reset all MOVIES to default state.\n\n' +
+      'This will:\n' +
+      '- Delete all current movies\n' +
+      '- Restore 20 default movies\n' +
+      '- Clear all reviews, watchlists, and history\n\n' +
+      'Users will NOT be affected.\n\n' +
+      'Continue?'
+    );
+    
+    if (!confirmed) return;
+
+    try {
+      setLoading(true);
+      await api.resetMovies();
+      alert('✅ Movies reset successfully!');
+      await loadData();
+    } catch (err) {
+      alert('Failed to reset movies: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading) {
     return <div className="loading">Loading admin dashboard...</div>;
   }
@@ -168,7 +242,27 @@ const AdminDashboard = () => {
         <div className="admin-content">
           {activeTab === 'users' && (
             <div className="users-management" data-testid="users-management">
-              <h2>Registered Users ({users.length})</h2>
+              <div className="section-header">
+                <h2>Registered Users ({users.length})</h2>
+                <div className="header-actions">
+                  <button
+                    className="btn btn-warning"
+                    onClick={handleResetUsers}
+                    data-testid="reset-users-btn"
+                    title="Reset only users to default state"
+                  >
+                    🔄 Reset Users
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={handleResetDatabase}
+                    data-testid="reset-all-btn"
+                    title="Reset entire database (users + movies)"
+                  >
+                    🔄 Reset All
+                  </button>
+                </div>
+              </div>
               <div className="users-table-wrapper">
                 <table className="users-table">
                   <thead>
@@ -259,13 +353,31 @@ const AdminDashboard = () => {
             <div className="movies-management" data-testid="movies-management">
               <div className="movies-header">
                 <h2>Movie Catalog ({movies.length})</h2>
-                <button
-                  className="btn btn-primary"
-                  onClick={() => setShowAddMovie(true)}
-                  data-testid="add-movie-btn"
-                >
-                  ➕ Add New Movie
-                </button>
+                <div className="header-actions">
+                  <button
+                    className="btn btn-warning"
+                    onClick={handleResetMovies}
+                    data-testid="reset-movies-btn"
+                    title="Reset only movies to default state"
+                  >
+                    🔄 Reset Movies
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={handleResetDatabase}
+                    data-testid="reset-all-btn"
+                    title="Reset entire database (users + movies)"
+                  >
+                    🔄 Reset All
+                  </button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => setShowAddMovie(true)}
+                    data-testid="add-movie-btn"
+                  >
+                    ➕ Add New Movie
+                  </button>
+                </div>
               </div>
               <div className="movies-table-wrapper">
                 <table className="movies-table">

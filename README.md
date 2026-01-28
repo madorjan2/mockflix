@@ -185,6 +185,11 @@ mockflix/
 - `PUT /api/users/:id/promote` - Promote user to admin
 - `PUT /api/users/:id/demote` - Demote admin to user
 
+### Database Reset (Admin Only)
+- `POST /api/seed/reset` - Reset entire database to default state
+- `POST /api/seed/reset-users` - Reset only users to default (5 users)
+- `POST /api/seed/reset-movies` - Reset only movies to default (20 movies)
+
 ### Testing/Simulation
 - `GET /api/test/slow?delay=ms` - Simulate slow response
 - `GET /api/test/timeout` - Simulate timeout
@@ -215,9 +220,11 @@ jane.smith@example.com / jane123 (Premium, User)
 - ✅ Full REST API with 35+ endpoints
 - ✅ JWT authentication & authorization
 - ✅ Role-based access control (user/admin)
-- ✅ Admin endpoints (user management, movie CRUD)
+- ✅ Admin user management (ban/unban/promote/demote)
+- ✅ Admin movie management (add/edit/delete)
 - ✅ User banning system
 - ✅ Subscription management (upgrade/downgrade)
+- ✅ Database reset endpoints (full/users only/movies only)
 - ✅ Comprehensive error handling
 - ✅ Network simulation endpoints
 - ✅ Interactive Swagger documentation
@@ -236,7 +243,12 @@ jane.smith@example.com / jane123 (Premium, User)
 - ✅ User authentication UI (login/register)
 - ✅ Profile page with subscription management
 - ✅ Premium tier indicators and badges
-- ✅ Admin dashboard (user & movie management)
+- ✅ Admin dashboard with three reset options:
+  - Reset Users Only (preserves movies)
+  - Reset Movies Only (preserves users)
+  - Reset All (full database reset)
+- ✅ Admin user management table (ban/unban/promote/demote)
+- ✅ Admin movie management table (view/add/delete)
 - ✅ Role-based UI (admin-only sections)
 - ✅ Test-friendly attributes (data-testid, aria-labels)
 
@@ -318,3 +330,84 @@ The backend uses Node's `--watch` flag for automatic restarts during development
 ## License
 
 MIT
+
+## Admin Dashboard
+
+### Accessing Admin Dashboard
+
+1. Login with admin account: `admin@example.com` / `admin123`
+2. Click on the **🛡️ Admin** link in the navigation bar
+3. Access two management tabs: Users and Movies
+
+### User Management Features
+
+- **View all registered users** with email, username, role, subscription tier, and status
+- **Ban/Unban users** - Banned users cannot log in (403 Forbidden)
+- **Promote to Admin** - Grant admin privileges to regular users
+- **Demote from Admin** - Remove admin privileges (cannot demote yourself)
+- **Reset Users** - Reset user table to 5 default accounts (preserves movies)
+- **Reset All** - Complete database reset (users + movies + all data)
+
+**Note:** Admin users cannot be banned.
+
+### Movie Management Features
+
+- **View all movies** with poster, title, year, rating, genres
+- **Add new movies** - Form with fields for:
+  - Title, Description, Poster URL, Backdrop URL
+  - Release Year, Rating (0-10), Runtime
+  - Genres (comma-separated)
+  - YouTube Video ID
+- **Delete movies** - Remove movies from the catalog
+- **Reset Movies** - Reset movie table to 20 default movies (preserves users)
+- **Reset All** - Complete database reset (users + movies + all data)
+
+### Database Reset Options
+
+Three reset buttons available in the admin dashboard:
+
+1. **Reset Users** (🔄 yellow button)
+   - Clears: users, reviews, watchlists, watch history
+   - Preserves: all movies
+   - Restores: 5 default test accounts
+
+2. **Reset Movies** (🔄 yellow button)
+   - Clears: movies, reviews, watchlists, watch history
+   - Preserves: all users
+   - Restores: 20 default movies
+
+3. **Reset All** (🔄 red button)
+   - Clears: everything
+   - Restores: 5 default users + 20 default movies
+   - Note: You will need to log in again after this
+
+### API Endpoints for Admin
+
+**User Management:**
+```bash
+GET    /api/users              # List all users
+PUT    /api/users/:id/ban      # Ban a user
+PUT    /api/users/:id/unban    # Unban a user
+PUT    /api/users/:id/promote  # Promote to admin
+PUT    /api/users/:id/demote   # Demote from admin
+```
+
+**Movie Management:**
+```bash
+POST   /api/movies             # Add new movie
+PUT    /api/movies/:id         # Update movie
+DELETE /api/movies/:id         # Delete movie
+```
+
+**Database Reset:**
+```bash
+POST   /api/seed/reset         # Reset entire database
+POST   /api/seed/reset-users   # Reset only users
+POST   /api/seed/reset-movies  # Reset only movies
+```
+
+All admin endpoints require:
+- Valid JWT token in Authorization header
+- User role must be 'admin'
+- Returns 401 if not authenticated
+- Returns 403 if not admin
