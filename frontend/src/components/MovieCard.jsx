@@ -42,9 +42,9 @@ const MovieCard = ({ movie, onWatchlistToggle, isInWatchlist = false }) => {
               ⭐ {movie.rating?.toFixed(1) || 'N/A'}
             </span>
           </div>
-          {movie.genres && (
+          {movie.genres && Array.isArray(movie.genres) && (
             <div className="movie-card-genres">
-              {JSON.parse(movie.genres).slice(0, 3).map((genre) => (
+              {movie.genres.slice(0, 3).map((genre) => (
                 <span key={genre} className="genre-tag">
                   {genre}
                 </span>
