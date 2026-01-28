@@ -58,9 +58,42 @@ export function generateToken(user) {
       id: user.id, 
       email: user.email, 
       username: user.username,
-      subscription_tier: user.subscription_tier 
+      subscription_tier: user.subscription_tier,
+      role: user.role || 'user'
     },
     JWT_SECRET,
     { expiresIn: '7d' }
   );
+}
+
+/**
+ * Middleware to check if user is admin
+ */
+export function requireAdmin(req, res, next) {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      error: 'Unauthorized',
+      message: 'Authentication required'
+    });
+  }
+
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      error: 'Forbidden',
+      message: 'Admin access required'
+    });
+  }
+
+  next();
+}
+
+/**
+ * Middleware to check if user is not banned
+ */
+export function checkBanned(req, res, next) {
+  // This would need to query the database to check if user is banned
+  // For now, we'll skip this middleware but it's here for reference
+  next();
 }

@@ -32,6 +32,11 @@ const Navbar = () => {
                 <Link to="/history" className="nav-link" data-testid="history-link">
                   History
                 </Link>
+                {user?.role === 'admin' && (
+                  <Link to="/admin" className="nav-link admin-link" data-testid="admin-link">
+                    🛡️ Admin
+                  </Link>
+                )}
               </>
             )}
           </div>

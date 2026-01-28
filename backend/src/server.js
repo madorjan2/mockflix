@@ -7,7 +7,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import { initDatabase } from './db/connection.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { rateLimit, authRateLimit } from './middleware/rateLimit.js';
-import { authenticateToken } from './middleware/auth.js';
+import { authenticateToken, requireAdmin } from './middleware/auth.js';
 
 import authRoutes from './routes/auth.js';
 import moviesRoutes from './routes/movies.js';
@@ -15,6 +15,7 @@ import reviewsRoutes from './routes/reviews.js';
 import watchlistRoutes from './routes/watchlist.js';
 import historyRoutes from './routes/history.js';
 import testRoutes from './routes/test.js';
+import adminRoutes from './routes/admin.js';
 
 // Load environment variables
 dotenv.config();
@@ -55,6 +56,7 @@ const swaggerOptions = {
       { name: 'Reviews', description: 'Movie reviews and ratings' },
       { name: 'Watchlist', description: 'User watchlist management' },
       { name: 'History', description: 'Watch history and progress tracking' },
+      { name: 'Admin', description: 'Admin-only endpoints for managing users and movies' },
       { name: 'Testing', description: 'Network simulation and testing endpoints' }
     ]
   },
@@ -102,6 +104,7 @@ app.use('/api/movies', authenticateToken, reviewsRoutes);
 app.use('/api/reviews', authenticateToken, reviewsRoutes);
 app.use('/api/watchlist', authenticateToken, watchlistRoutes);
 app.use('/api/history', authenticateToken, historyRoutes);
+app.use('/api/admin', authenticateToken, requireAdmin, adminRoutes);
 app.use('/api/test', testRoutes);
 
 // Protected route for /api/auth/me
@@ -128,9 +131,9 @@ async function startServer() {
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
       console.log('');
       console.log('📋 Test Accounts:');
-      console.log('   test@example.com / password123 (Free)');
-      console.log('   admin@example.com / admin123 (Premium)');
-      console.log('   premium@example.com / premium123 (Premium)');
+      console.log('   test@example.com / password123 (Free User)');
+      console.log('   admin@example.com / admin123 (Admin, Premium)');
+      console.log('   premium@example.com / premium123 (Premium User)');
       console.log('');
     });
   } catch (error) {

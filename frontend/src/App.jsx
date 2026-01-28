@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import MovieDetails from './pages/MovieDetails';
 import Watch from './pages/Watch';
 import Profile from './pages/Profile';
+import AdminDashboard from './pages/AdminDashboard';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -57,6 +58,14 @@ const App = () => {
                 element={
                   <ProtectedRoute>
                     <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
                   </ProtectedRoute>
                 }
               />

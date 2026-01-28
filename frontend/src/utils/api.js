@@ -85,6 +85,47 @@ class ApiClient {
     return this.request('/auth/downgrade', { method: 'POST' });
   }
 
+  // Admin endpoints
+  async getUsers() {
+    return this.request('/admin/users');
+  }
+
+  async banUser(userId) {
+    return this.request(`/admin/users/${userId}/ban`, { method: 'PUT' });
+  }
+
+  async unbanUser(userId) {
+    return this.request(`/admin/users/${userId}/unban`, { method: 'PUT' });
+  }
+
+  async promoteUser(userId) {
+    return this.request(`/admin/users/${userId}/promote`, { method: 'PUT' });
+  }
+
+  async demoteUser(userId) {
+    return this.request(`/admin/users/${userId}/demote`, { method: 'PUT' });
+  }
+
+  async addMovie(movieData) {
+    return this.request('/admin/movies', {
+      method: 'POST',
+      body: JSON.stringify(movieData),
+    });
+  }
+
+  async updateMovie(movieId, movieData) {
+    return this.request(`/admin/movies/${movieId}`, {
+      method: 'PUT',
+      body: JSON.stringify(movieData),
+    });
+  }
+
+  async deleteMovie(movieId) {
+    return this.request(`/admin/movies/${movieId}`, {
+      method: 'DELETE',
+    });
+  }
+
   // Movies endpoints
   async getMovies(params = {}) {
     const queryString = new URLSearchParams(params).toString();

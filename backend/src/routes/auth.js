@@ -79,7 +79,7 @@ router.post('/register', async (req, res) => {
       [email, username, password_hash]
     );
 
-    const user = queryOne('SELECT id, email, username, subscription_tier, created_at FROM users WHERE id = ?', [result.lastID]);
+    const user = queryOne('SELECT id, email, username, subscription_tier, role, created_at FROM users WHERE id = ?', [result.lastID]);
 
     // Generate token
     const token = generateToken(user);
@@ -153,7 +153,14 @@ router.post('/login', async (req, res) => {
         message: 'Invalid email or password'
       });
     }
-
+    // Check if banned
+    if (user.is_banned) {
+      return res.status(403).json({
+        success: false,
+        error: 'Forbidden',
+        message: 'Your account has been banned'
+      });
+    }
     // Check password
     const validPassword = await bcrypt.compare(password, user.password_hash);
     if (!validPassword) {
@@ -205,7 +212,7 @@ router.post('/login', async (req, res) => {
 router.get('/me', (req, res) => {
   // This route uses authenticateToken middleware from server.js
   const user = queryOne(
-    'SELECT id, email, username, subscription_tier, created_at FROM users WHERE id = ?',
+    'SELECT id, email, username, subscription_tier, role, is_banned, created_at FROM users WHERE id = ?',
     [req.user.id]
   );
 
@@ -270,7 +277,7 @@ router.post('/upgrade', (req, res) => {
 
   // Get current user
   const user = queryOne(
-    'SELECT id, email, username, subscription_tier FROM users WHERE id = ?',
+    'SELECT id, email, username, subscription_tier, role FROM users WHERE id = ?',
     [req.user.id]
   );
 
@@ -299,7 +306,7 @@ router.post('/upgrade', (req, res) => {
 
   // Get updated user
   const updatedUser = queryOne(
-    'SELECT id, email, username, subscription_tier, created_at FROM users WHERE id = ?',
+    'SELECT id, email, username, subscription_tier, role, created_at FROM users WHERE id = ?',
     [req.user.id]
   );
 
@@ -337,7 +344,7 @@ router.post('/downgrade', (req, res) => {
 
   // Get current user
   const user = queryOne(
-    'SELECT id, subscription_tier FROM users WHERE id = ?',
+    'SELECT id, subscription_tier, role FROM users WHERE id = ?',
     [req.user.id]
   );
 
@@ -366,7 +373,7 @@ router.post('/downgrade', (req, res) => {
 
   // Get updated user
   const updatedUser = queryOne(
-    'SELECT id, email, username, subscription_tier, created_at FROM users WHERE id = ?',
+    'SELECT id, email, username, subscription_tier, role, created_at FROM users WHERE id = ?',
     [req.user.id]
   );
 

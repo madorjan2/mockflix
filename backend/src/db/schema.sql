@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash TEXT NOT NULL,
     username TEXT NOT NULL,
     subscription_tier TEXT DEFAULT 'free' CHECK(subscription_tier IN ('free', 'premium')),
+    role TEXT DEFAULT 'user' CHECK(role IN ('user', 'admin')),
+    is_banned INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

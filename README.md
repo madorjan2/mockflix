@@ -50,6 +50,23 @@ A dummy streaming platform (Netflix-style) built for showcasing automation testi
 
 ### Running the Application
 
+**Quick Start (One Command):**
+
+- **Windows:** Double-click `start.bat` or run in terminal:
+  ```bash
+  start.bat
+  ```
+
+- **Linux/Mac:** Run in terminal:
+  ```bash
+  chmod +x start.sh  # First time only
+  ./start.sh
+  ```
+
+This will start both backend and frontend servers in separate terminal windows.
+
+**Manual Start:**
+
 1. **Start Backend (Port 3000):**
    ```bash
    cd backend
@@ -64,7 +81,7 @@ A dummy streaming platform (Netflix-style) built for showcasing automation testi
    ```
 
 3. **Access Application:**
-   - Frontend: http://localhost:5173 (when implemented)
+   - Frontend: http://localhost:5173
    - Backend API: http://localhost:3000/api
    - API Documentation: http://localhost:3000/api-docs
    - Health Check: http://localhost:3000/health
@@ -97,13 +114,28 @@ mockflix/
 │   ├── .env                 # Environment variables
 │   └── package.json
 │
-├── frontend/                # React app (to be implemented)
+├── frontend/                # React app
 │   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── hooks/
-│   │   ├── utils/
+│   │   ├── components/      # Reusable components
+│   │   │   ├── MovieCard.jsx
+│   │   │   ├── MovieGrid.jsx
+│   │   │   ├── SearchBar.jsx
+│   │   │   ├── FilterPanel.jsx
+│   │   │   ├── Navbar.jsx
+│   │   │   └── PrivateRoute.jsx
+│   │   ├── pages/          # Route pages
+│   │   │   ├── Home.jsx
+│   │   │   ├── MovieDetails.jsx
+│   │   │   ├── Watch.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   └── Profile.jsx
+│   │   ├── context/        # React context
+│   │   │   └── AuthContext.jsx
+│   │   ├── utils/          # Utilities
+│   │   │   └── api.js
 │   │   └── App.jsx
+│   ├── index.html
 │   └── package.json
 │
 ├── copilot-instructions.md  # Project guidelines
@@ -117,6 +149,8 @@ mockflix/
 - `POST /api/auth/login` - Login user
 - `GET /api/auth/me` - Get current user
 - `POST /api/auth/logout` - Logout user
+- `POST /api/auth/upgrade` - Upgrade to premium (mock)
+- `POST /api/auth/downgrade` - Downgrade to free (mock)
 
 ### Movies
 - `GET /api/movies` - List movies (pagination, filters)
@@ -141,6 +175,16 @@ mockflix/
 - `POST /api/history/:movieId` - Add to history
 - `PUT /api/history/:movieId/progress` - Update progress
 
+### Admin (Admin Role Required)
+- `GET /api/admin/users` - List all users
+- `PUT /api/admin/users/:id/ban` - Ban a user
+- `PUT /api/admin/users/:id/unban` - Unban a user
+- `PUT /api/admin/users/:id/promote` - Promote user to admin
+- `PUT /api/admin/users/:id/demote` - Demote admin to user
+- `POST /api/admin/movies` - Add new movie
+- `PUT /api/admin/movies/:id` - Update movie
+- `DELETE /api/admin/movies/:id` - Delete movie
+
 ### Testing/Simulation
 - `GET /api/test/slow?delay=ms` - Simulate slow response
 - `GET /api/test/timeout` - Simulate timeout
@@ -153,11 +197,11 @@ mockflix/
 
 ### Test Accounts
 ```
-test@example.com / password123 (Free)
-admin@example.com / admin123 (Premium)
-premium@example.com / premium123 (Premium)
-john.doe@example.com / john123 (Free)
-jane.smith@example.com / jane123 (Premium)
+test@example.com / password123 (Free, User)
+admin@example.com / admin123 (Premium, Admin)
+premium@example.com / premium123 (Premium, User)
+john.doe@example.com / john123 (Free, User)
+jane.smith@example.com / jane123 (Premium, User)
 ```
 
 ### Movies
@@ -167,26 +211,34 @@ jane.smith@example.com / jane123 (Premium)
 
 ## Features
 
-### Backend (Completed)
-- ✅ Full REST API with 25+ endpoints
+### Backend
+- ✅ Full REST API with 35+ endpoints
 - ✅ JWT authentication & authorization
-- ✅ Rate limiting (global + endpoint-specific)
+- ✅ Role-based access control (user/admin)
+- ✅ Admin endpoints (user management, movie CRUD)
+- ✅ User banning system
+- ✅ Subscription management (upgrade/downgrade)
 - ✅ Comprehensive error handling
 - ✅ Network simulation endpoints
 - ✅ Interactive Swagger documentation
 - ✅ Pagination and filtering
 - ✅ CRUD operations for all resources
 - ✅ Cross-platform SQLite (sql.js)
+- ⚠️ Rate limiting disabled (test automation friendly)
 
-### Frontend (To Be Implemented)
-- 🎬 Browse and search movies
-- 🔍 Filter by genre, year, rating
-- ⭐ User reviews and ratings
-- 📝 Watchlist management
-- 📊 Watch history tracking
-- 🎥 YouTube video player integration
-- 👤 User authentication UI
-- 🧪 Test-friendly attributes
+### Frontend
+- ✅ Browse and search movies
+- ✅ Filter by genre, year, rating
+- ✅ User reviews and ratings
+- ✅ Watchlist management
+- ✅ Watch history tracking
+- ✅ YouTube video player integration
+- ✅ User authentication UI (login/register)
+- ✅ Profile page with subscription management
+- ✅ Premium tier indicators and badges
+- ✅ Admin dashboard (user & movie management)
+- ✅ Role-based UI (admin-only sections)
+- ✅ Test-friendly attributes (data-testid, aria-labels)
 
 ## Testing Features
 
@@ -203,16 +255,18 @@ This application is specifically designed for testing scenarios:
 - Rate limiting
 - Network conditions (slow, timeout)
 
-### UI Testing (When Frontend Implemented)
-- Form interactions
-- Navigation flows
-- Dynamic content updates
-- Modal dialogs
-- Loading states
-- Error messages
-- Responsive elements
-- Iframe handling
-- Session persistence
+### UI Testing
+- ✅ Form interactions (login, register, review forms)
+- ✅ Navigation flows (browse → details → watch)
+- ✅ Dynamic content updates (watchlist, ratings, reviews)
+- ✅ Modal dialogs (upgrade/downgrade subscription)
+- ✅ Loading states and spinners
+- ✅ Error messages and validation
+- ✅ Responsive elements (filters, dropdowns)
+- ✅ Iframe handling (YouTube player)
+- ✅ Session persistence (JWT tokens)
+- ✅ Subscription tier switching (mock payments)
+- ✅ Protected routes (authentication required)
 
 ## Development
 
@@ -238,10 +292,13 @@ The backend uses Node's `--watch` flag for automatic restarts during development
 
 - **sql.js** used for cross-platform compatibility (no native build tools required on Windows)
 - **bcryptjs** instead of bcrypt for same reason
-- **JWT tokens** expire after 7 days
-- **Rate limiting** is IP-based with in-memory storage
+- **JWT tokens** expire after 7 days, include user role
+- **Rate limiting** disabled for test automation (code available but commented out)
 - **Database** is saved to disk automatically after modifications
 - **Swagger** annotations embedded in route files
+- **Subscription tiers** are 'free' and 'premium' (mock upgrade/downgrade, no real payments)
+- **User roles** are 'user' and 'admin' (role-based access control)
+- **Admin features** include user management (ban/unban/promote) and movie CRUD operations
 
 ## HTTP Status Codes
 

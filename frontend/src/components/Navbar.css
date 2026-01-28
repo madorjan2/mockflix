@@ -50,6 +50,15 @@
   animation: shimmer 2s ease-in-out infinite;
 }
 
+.admin-link {
+  color: #ff6b6b !important;
+  font-weight: 600;
+}
+
+.admin-link:hover {
+  color: #ff5252 !important;
+}
+
 @keyframes shimmer {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.6; }

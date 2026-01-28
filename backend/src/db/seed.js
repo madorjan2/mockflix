@@ -21,41 +21,46 @@ async function seed() {
         email: 'test@example.com',
         username: 'TestUser',
         password: 'password123',
-        subscription_tier: 'free'
+        subscription_tier: 'free',
+        role: 'user'
       },
       {
         email: 'admin@example.com',
         username: 'Admin',
         password: 'admin123',
-        subscription_tier: 'premium'
+        subscription_tier: 'premium',
+        role: 'admin'
       },
       {
         email: 'premium@example.com',
         username: 'PremiumUser',
         password: 'premium123',
-        subscription_tier: 'premium'
+        subscription_tier: 'premium',
+        role: 'user'
       },
       {
         email: 'john.doe@example.com',
         username: 'JohnDoe',
         password: 'john123',
-        subscription_tier: 'free'
+        subscription_tier: 'free',
+        role: 'user'
       },
       {
         email: 'jane.smith@example.com',
         username: 'JaneSmith',
         password: 'jane123',
-        subscription_tier: 'premium'
+        subscription_tier: 'premium',
+        role: 'user'
       }
     ];
 
     for (const user of users) {
       const hashedPassword = await bcrypt.hash(user.password, 10);
       run(
-        'INSERT INTO users (email, username, password_hash, subscription_tier) VALUES (?, ?, ?, ?)',
-        [user.email, user.username, hashedPassword, user.subscription_tier]
+        'INSERT INTO users (email, username, password_hash, subscription_tier, role) VALUES (?, ?, ?, ?, ?)',
+        [user.email, user.username, hashedPassword, user.subscription_tier, user.role]
       );
-      console.log(`  ✅ Created user: ${user.email} (${user.subscription_tier})`);
+      console.log(`  ✅ Created user: ${user.email} (${user.subscription_tier}, ${user.role})`);
     }
 
     // Seed movies

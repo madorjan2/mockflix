@@ -26,7 +26,7 @@ This is a dummy streaming platform application (similar to Netflix/IMDb) built s
 ### Frontend
 - **Framework**: React with Vite
 - **Language**: JavaScript
-- **Styling**: Your choice (Tailwind, CSS Modules, or plain CSS)
+- **Styling**: Plain CSS with CSS Modules
 - **Video Player**: YouTube embeds (iframes)
 
 ### Data Source
@@ -78,6 +78,8 @@ This is a dummy streaming platform application (similar to Netflix/IMDb) built s
 - `POST /api/auth/login` - Login user (200, 401, 422)
 - `POST /api/auth/logout` - Logout user (200, 401)
 - `GET /api/auth/me` - Get current user (200, 401)
+- `POST /api/auth/upgrade` - Upgrade to premium (200, 401, 409) - Mock upgrade
+- `POST /api/auth/downgrade` - Downgrade to free (200, 401, 409) - Mock downgrade
 
 ### Movies
 - `GET /api/movies` - List movies with pagination/filters (200, 400)
@@ -107,10 +109,15 @@ This is a dummy streaming platform application (similar to Netflix/IMDb) built s
 - `POST /api/history/:movieId` - Add to history (201, 401)
 - `PUT /api/history/:movieId/progress` - Update watch progress (200, 401, 404)
 
-### Admin (Optional)
-- `POST /api/admin/movies` - Add movie (201, 401, 403)
-- `PUT /api/admin/movies/:id` - Update movie (200, 401, 403, 404)
-- `DELETE /api/admin/movies/:id` - Delete movie (204, 401, 403, 404)
+### Admin
+- `GET /api/admin/users` - List all users (200, 403)
+- `PUT /api/admin/users/:id/ban` - Ban user (200, 403, 404)
+- `PUT /api/admin/users/:id/unban` - Unban user (200, 403, 404)
+- `PUT /api/admin/users/:id/promote` - Promote to admin (200, 403, 404, 409)
+- `PUT /api/admin/users/:id/demote` - Demote from admin (200, 403, 404, 409)
+- `POST /api/admin/movies` - Add movie (201, 400, 403)
+- `PUT /api/admin/movies/:id` - Update movie (200, 403, 404)
+- `DELETE /api/admin/movies/:id` - Delete movie (204, 403, 404)
 
 ### Network/Error Simulation Endpoints
 - `GET /api/test/slow?delay=ms` - Simulate slow response (200)
@@ -128,23 +135,26 @@ This is a dummy streaming platform application (similar to Netflix/IMDb) built s
 - ✅ Pagination
 - ✅ Data validation errors
 - ✅ Conflict scenarios (duplicate reviews, etc.)
-- ✅ Rate limiting
+- ⚠️ Rate limiting (disabled by default for testing, code available if needed)
 - ✅ Network conditions (slow, timeout, intermittent)
 - ✅ Request/response headers validation
 - ✅ JSON schema validation
+- ✅ Subscription tier changes (upgrade/downgrade)
 
 ### UI Testing Scenarios
 - ✅ Form interactions (registration, login, search, reviews)
 - ✅ Navigation flows (browse → details → watch)
 - ✅ Dynamic content updates (watchlist, ratings)
-- ✅ Modal dialogs and popups
+- ✅ Modal dialogs and popups (subscription upgrade/downgrade)
 - ✅ Loading states and spinners
 - ✅ Error messages and validation
 - ✅ Responsive elements (filters, dropdowns)
 - ✅ Iframe handling (YouTube player)
-- ✅ Infinite scroll or pagination
-- ✅ Session persistence
-- ✅ Dark/light mode (optional but nice)
+- ✅ Pagination (grid-based)
+- ✅ Session persistence (JWT in localStorage)
+- ✅ Protected routes (authentication required)
+- ✅ Subscription tier indicators (premium badges, stars)
+- ✅ Mock payment flow (upgrade/downgrade)
 
 ## Code Quality Guidelines
 
@@ -212,7 +222,7 @@ This is a dummy streaming platform application (similar to Netflix/IMDb) built s
 ### Database Schema Suggestions
 
 **Users Table**:
-- id, email, password_hash, username, created_at, subscription_tier
+- id, email, password_hash, username, created_at, subscription_tier, role, is_banned
 
 **Movies Table**:
 - id, tmdb_id, title, description, poster_url, release_year, rating, genres, youtube_video_id
@@ -279,45 +289,74 @@ streaming-platform/
 
 ## Implementation Status
 
-### ✅ Completed: Backend API
-- Full REST API with 25+ endpoints
+### ✅ Completed: Full-Stack Application
+
+**Backend:**
+- Full REST API with 35+ endpoints
 - JWT authentication and authorization
+- Role-based access control (user/admin)
+- Admin endpoints for user and movie management
+- User banning system
 - SQLite database with sql.js (cross-platform)
 - Database seeding with sample data (5 users, 20 movies)
-- Rate limiting and error handling
-- Network simulation endpoints for testing
+- Error handling and network simulation endpoints
+- Rate limiting code available but disabled (test-friendly)
+- Subscription tier management (upgrade/downgrade)
 - **Swagger documentation at http://localhost:3000/api-docs**
 
-### 🚧 To Be Implemented: Frontend
-- React application with Vite
-- All UI components and pages
-- Integration with backend API
-- User authentication flow
-- Movie browsing and details
-- Search and filtering
-- Watchlist and history features
-- Video player integration
+**Frontend:**
+- React 18 application with Vite
+- 30+ component and page files
+- Complete integration with backend API
+- User authentication flow (login/register)
+- Movie browsing, search, and filtering
+- Movie details with reviews and ratings
+- YouTube video player integration (/watch route)
+- Watchlist and watch history
+- Profile page with subscription management
+- Admin dashboard with user and movie management
+- Role-based UI rendering (admin-only sections)
+- Premium tier indicators (badges, stars, shimmer effects)
+- Modal dialogs for subscription and admin actions
+- Test-friendly attributes throughout (data-testid, aria-labels)
+- AuthContext for state management
 
 ## Setup Instructions
 
-1. **Install dependencies**: `npm install` in both backend and frontend
+1. **Install dependencies**: `npm install` in both backend and frontend folders
 2. **Seed database**: `cd backend && npm run seed`
 3. **Start backend**: `cd backend && npm run dev` (port 3000)
-4. **Start frontend**: `cd frontend && npm run dev` (port 5173) - when implemented
-5. **Access API docs**: http://localhost:3000/api-docs
-6. **Access app**: http://localhost:5173 - when frontend is ready
+4. **Start frontend**: `cd frontend && npm run dev` (port 5173)
+5. **Access app**: http://localhost:5173
+6. **Access API docs**: http://localhost:3000/api-docs
+
+## Test Accounts
+
+- **Free User**: test@example.com / password123
+- **Admin**: admin@example.com / admin123 (premium tier)
+- **Premium User**: premium@example.com / premium123
+- **Free User**: john.doe@example.com / john123
+- **Premium User**: jane.smith@example.com / jane123
+
+The admin account has full access to the admin dashboard for user management and movie operations!
 
 ## Additional Notes
 
 - Using **sql.js** (pure JavaScript SQLite) for cross-platform compatibility - no native build tools required on Windows
 - Using **bcryptjs** instead of bcrypt for the same reason - works everywhere without compilation
-- Keep the UI clean but don't obsess over design - focus is on testability
-- Add loading states everywhere (great for testing!)
-- Include error boundaries in React
-- Add a simple auth mechanism (JWT or session, keep it simple)
-- Mock the payment/subscription flow (don't need real payment processing)
-- Consider adding a `/api/reset` endpoint to reset database state between test runs
-- Add sample users in seed data (test@example.com, admin@example.com)
+- **Rate limiting is DISABLED** by default - inappropriate for test automation. Code exists in middleware but is commented out in server.js
+- Backend returns **genres as arrays** (parsed from JSON in database) - frontend expects arrays, not CSV strings
+- **AuthContext** manages user state across the React app
+- **JWT tokens** stored in localStorage, included in Authorization headers, contain user role
+- **Reviews endpoint** returns 401 when not authenticated - frontend handles this gracefully
+- **Subscription management** is fully functional but mock (no real payments)
+- **Admin role** system with requireAdmin middleware - admins cannot be banned
+- **User banning** prevents login (403 Forbidden response)
+- All components include **data-testid** attributes for automation testing
+- **Premium indicators** appear in navbar and profile page (gold badges, stars, shimmer animations)
+- **Admin dashboard** accessible at /admin route - shows user table with ban/promote/demote actions
+- Sample users in seed data span both free/premium tiers and user/admin roles
+- Database automatically resets when running `npm run seed`
 
 ## What NOT to Do
 
