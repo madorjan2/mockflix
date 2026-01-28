@@ -1,6 +1,6 @@
 import express from 'express';
 import { query, queryOne, run } from '../db/connection.js';
-import { requireAdmin } from '../middleware/auth.js';
+import { authenticateToken, requireAdmin } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -394,7 +394,7 @@ router.get('/:id/similar', (req, res) => {
  *       403:
  *         description: Admin access required
  */
-router.post('/', requireAdmin, (req, res) => {
+router.post('/', authenticateToken, requireAdmin, (req, res) => {
   try {
     const {
       title,
@@ -491,7 +491,7 @@ router.post('/', requireAdmin, (req, res) => {
  *       404:
  *         description: Movie not found
  */
-router.put('/:id', requireAdmin, (req, res) => {
+router.put('/:id', authenticateToken, requireAdmin, (req, res) => {
   try {
     const { id } = req.params;
     const {
@@ -609,7 +609,7 @@ router.put('/:id', requireAdmin, (req, res) => {
  *       404:
  *         description: Movie not found
  */
-router.delete('/:id', requireAdmin, (req, res) => {
+router.delete('/:id', authenticateToken, requireAdmin, (req, res) => {
   try {
     const { id } = req.params;
 

@@ -9,6 +9,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('users');
   const [users, setUsers] = useState([]);
+  const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddMovie, setShowAddMovie] = useState(false);
   const [newMovie, setNewMovie] = useState({
@@ -37,6 +38,9 @@ const AdminDashboard = () => {
       if (activeTab === 'users') {
         const response = await api.getUsers();
         setUsers(response.data || []);
+      } else if (activeTab === 'movies') {
+        const response = await api.getMovies({ limit: 1000 }); // Get all movies for admin
+        setMovies(response.data?.movies || []);
       }
     } catch (err) {
       console.error('Failed to load data:', err);
@@ -254,7 +258,7 @@ const AdminDashboard = () => {
           {activeTab === 'movies' && (
             <div className="movies-management" data-testid="movies-management">
               <div className="movies-header">
-                <h2>Movie Catalog</h2>
+                <h2>Movie Catalog ({movies.length})</h2>
                 <button
                   className="btn btn-primary"
                   onClick={() => setShowAddMovie(true)}
@@ -263,9 +267,60 @@ const AdminDashboard = () => {
                   ➕ Add New Movie
                 </button>
               </div>
-              <p className="info-message">
-                Movie deletion is available. Use the movie details page or contact support for bulk operations.
-              </p>
+              <div className="movies-table-wrapper">
+                <table className="movies-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Poster</th>
+                      <th>Title</th>
+                      <th>Year</th>
+                      <th>Rating</th>
+                      <th>Genres</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {movies.map((movie) => (
+                      <tr key={movie.id} data-testid={`movie-row-${movie.id}`}>
+                        <td>{movie.id}</td>
+                        <td>
+                          {movie.poster_url && (
+                            <img 
+                              src={movie.poster_url} 
+                              alt={movie.title}
+                              className="movie-thumbnail"
+                            />
+                          )}
+                        </td>
+                        <td>{movie.title}</td>
+                        <td>{movie.release_year}</td>
+                        <td>⭐ {movie.rating ? movie.rating.toFixed(1) : 'N/A'}</td>
+                        <td>
+                          {Array.isArray(movie.genres) 
+                            ? movie.genres.slice(0, 2).join(', ')
+                            : typeof movie.genres === 'string'
+                            ? movie.genres.split(',').slice(0, 2).join(', ')
+                            : 'N/A'
+                          }
+                          {(Array.isArray(movie.genres) && movie.genres.length > 2) && '...'}
+                        </td>
+                        <td>
+                          <div className="action-buttons">
+                            <button
+                              className="btn-small btn-danger"
+                              onClick={() => handleDeleteMovie(movie.id)}
+                              data-testid={`delete-movie-${movie.id}`}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </div>
