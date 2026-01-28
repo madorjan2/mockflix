@@ -1,0 +1,246 @@
+import express from 'express';
+import bcrypt from 'bcryptjs';
+import { query, queryOne, run } from '../db/connection.js';
+import { generateToken } from '../middleware/auth.js';
+
+const router = express.Router();
+
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - username
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               password:
+ *                 type: string
+ *                 minLength: 6
+ *               username:
+ *                 type: string
+ *                 minLength: 3
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *       400:
+ *         description: Validation error
+ *       409:
+ *         description: Email already exists
+ */
+router.post('/register', async (req, res) => {
+  try {
+    const { email, password, username } = req.body;
+
+    // Validation
+    if (!email || !password || !username) {
+      return res.status(400).json({
+        success: false,
+        error: 'ValidationError',
+        message: 'Email, password, and username are required'
+      });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        error: 'ValidationError',
+        message: 'Password must be at least 6 characters'
+      });
+    }
+
+    // Check if user exists
+    const existingUser = queryOne('SELECT id FROM users WHERE email = ?', [email]);
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        error: 'Conflict',
+        message: 'Email already registered'
+      });
+    }
+
+    // Hash password
+    const password_hash = await bcrypt.hash(password, 10);
+
+    // Create user
+    const result = run(
+      'INSERT INTO users (email, username, password_hash) VALUES (?, ?, ?)',
+      [email, username, password_hash]
+    );
+
+    const user = queryOne('SELECT id, email, username, subscription_tier, created_at FROM users WHERE id = ?', [result.lastID]);
+
+    // Generate token
+    const token = generateToken(user);
+
+    res.status(201).json({
+      success: true,
+      message: 'User registered successfully',
+      data: {
+        user,
+        token
+      }
+    });
+  } catch (error) {
+    console.error('Register error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'ServerError',
+      message: 'Failed to register user'
+    });
+  }
+});
+
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Login user
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *       401:
+ *         description: Invalid credentials
+ *       422:
+ *         description: Validation error
+ */
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Validation
+    if (!email || !password) {
+      return res.status(422).json({
+        success: false,
+        error: 'ValidationError',
+        message: 'Email and password are required'
+      });
+    }
+
+    // Find user
+    const user = queryOne('SELECT * FROM users WHERE email = ?', [email]);
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        error: 'Unauthorized',
+        message: 'Invalid email or password'
+      });
+    }
+
+    // Check password
+    const validPassword = await bcrypt.compare(password, user.password_hash);
+    if (!validPassword) {
+      return res.status(401).json({
+        success: false,
+        error: 'Unauthorized',
+        message: 'Invalid email or password'
+      });
+    }
+
+    // Remove password from response
+    delete user.password_hash;
+
+    // Generate token
+    const token = generateToken(user);
+
+    res.json({
+      success: true,
+      message: 'Login successful',
+      data: {
+        user,
+        token
+      }
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'ServerError',
+      message: 'Failed to login'
+    });
+  }
+});
+
+/**
+ * @swagger
+ * /api/auth/me:
+ *   get:
+ *     summary: Get current user
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Current user data
+ *       401:
+ *         description: Not authenticated
+ */
+router.get('/me', (req, res) => {
+  // This route uses authenticateToken middleware from server.js
+  const user = queryOne(
+    'SELECT id, email, username, subscription_tier, created_at FROM users WHERE id = ?',
+    [req.user.id]
+  );
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      error: 'NotFound',
+      message: 'User not found'
+    });
+  }
+
+  res.json({
+    success: true,
+    data: user
+  });
+});
+
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     summary: Logout user
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Logout successful
+ */
+router.post('/logout', (req, res) => {
+  // For JWT, logout is handled client-side by removing the token
+  res.json({
+    success: true,
+    message: 'Logout successful'
+  });
+});
+
+export default router;
