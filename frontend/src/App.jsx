@@ -27,9 +27,9 @@ const App = () => {
   return (
     <Router>
       <AuthProvider>
-        <div className="app" data-testid="app">
+        <div className="app" data-testid="app" style={{ minHeight: '100vh', backgroundColor: '#141414' }}>
           <Navbar />
-          <main>
+          <main style={{ flex: 1 }}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
