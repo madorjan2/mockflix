@@ -30,6 +30,8 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     const response = await api.login(credentials);
     setUser(response.data.user);
+    // Ensure token is set (already done in api.login, but being explicit)
+    api.setToken(response.data.token);
     return response;
   };
 

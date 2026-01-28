@@ -107,9 +107,6 @@ app.use('/api/history', authenticateToken, historyRoutes);
 app.use('/api/users', authenticateToken, usersRoutes);
 app.use('/api/test', testRoutes);
 
-// Protected route for /api/auth/me
-app.get('/api/auth/me', authenticateToken, authRoutes);
-
 // 404 handler
 app.use(notFoundHandler);
 

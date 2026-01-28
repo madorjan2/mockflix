@@ -1,7 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import { query, queryOne, run } from '../db/connection.js';
-import { generateToken } from '../middleware/auth.js';
+import { generateToken, authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -209,8 +209,7 @@ router.post('/login', async (req, res) => {
  *       401:
  *         description: Not authenticated
  */
-router.get('/me', (req, res) => {
-  // This route uses authenticateToken middleware from server.js
+router.get('/me', authenticateToken, (req, res) => {
   const user = queryOne(
     'SELECT id, email, username, subscription_tier, role, is_banned, created_at FROM users WHERE id = ?',
     [req.user.id]

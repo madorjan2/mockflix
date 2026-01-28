@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
-import { initDatabase, run, closeDatabase } from './connection.js';
+import { initDatabase, run, closeDatabase, getDatabase } from './connection.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,6 +13,23 @@ async function seed() {
 
     // Initialize database
     await initDatabase();
+
+    // Drop all existing tables to ensure clean slate
+    console.log('🗑️  Dropping existing tables...');
+    const db = getDatabase();
+    db.exec(`
+      DROP TABLE IF EXISTS watch_history;
+      DROP TABLE IF EXISTS watchlist;
+      DROP TABLE IF EXISTS reviews;
+      DROP TABLE IF EXISTS movies;
+      DROP TABLE IF EXISTS users;
+    `);
+
+    // Recreate schema
+    console.log('🏗️  Creating fresh schema...');
+    const schemaPath = path.join(__dirname, 'schema.sql');
+    const schema = fs.readFileSync(schemaPath, 'utf8');
+    db.exec(schema);
 
     // Seed users
     console.log('👤 Seeding users...');
