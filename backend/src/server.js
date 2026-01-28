@@ -68,10 +68,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Global rate limiting
+// Global rate limiting (relaxed for development/testing)
 app.use('/api/', rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 1000 // Increased for development with React Strict Mode
 }));
 
 // API Documentation

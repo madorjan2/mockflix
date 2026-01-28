@@ -28,15 +28,22 @@ const MovieDetails = () => {
     setLoading(true);
     setError('');
     try {
-      const [movieRes, reviewsRes, similarRes] = await Promise.all([
+      const [movieRes, similarRes] = await Promise.all([
         api.getMovie(id),
-        api.getReviews(id),
         api.getSimilarMovies(id),
       ]);
 
       setMovie(movieRes.data);
-      setReviews(reviewsRes.data || []);
       setSimilarMovies(similarRes.data || []);
+
+      // Load reviews (works for both authenticated and unauthenticated users)
+      try {
+        const reviewsRes = await api.getReviews(id);
+        setReviews(reviewsRes.data || []);
+      } catch (err) {
+        // Reviews endpoint might require auth, handle gracefully
+        setReviews([]);
+      }
 
       if (isAuthenticated) {
         try {
@@ -129,7 +136,7 @@ const MovieDetails = () => {
     );
   }
 
-  const genres = JSON.parse(movie.genres || '[]');
+  const genres = Array.isArray(movie.genres) ? movie.genres : [];
 
   return (
     <div className="movie-details-page" data-testid="movie-details-page">
