@@ -83,7 +83,10 @@ This is a dummy streaming platform application (similar to Netflix/IMDb) built s
 
 ### Movies
 - `GET /api/movies` - List movies with pagination/filters (200, 400)
+- `POST /api/movies` - Add new movie (admin only) (201, 400, 403)
 - `GET /api/movies/:id` - Get movie details (200, 404)
+- `PUT /api/movies/:id` - Update movie (admin only) (200, 403, 404)
+- `DELETE /api/movies/:id` - Delete movie (admin only) (204, 403, 404)
 - `GET /api/movies/search?q=term` - Search movies (200, 400)
 - `GET /api/movies/trending` - Get trending movies (200)
 - `GET /api/movies/:id/similar` - Get similar movies (200, 404)
@@ -109,15 +112,12 @@ This is a dummy streaming platform application (similar to Netflix/IMDb) built s
 - `POST /api/history/:movieId` - Add to history (201, 401)
 - `PUT /api/history/:movieId/progress` - Update watch progress (200, 401, 404)
 
-### Admin
-- `GET /api/admin/users` - List all users (200, 403)
-- `PUT /api/admin/users/:id/ban` - Ban user (200, 403, 404)
-- `PUT /api/admin/users/:id/unban` - Unban user (200, 403, 404)
-- `PUT /api/admin/users/:id/promote` - Promote to admin (200, 403, 404, 409)
-- `PUT /api/admin/users/:id/demote` - Demote from admin (200, 403, 404, 409)
-- `POST /api/admin/movies` - Add movie (201, 400, 403)
-- `PUT /api/admin/movies/:id` - Update movie (200, 403, 404)
-- `DELETE /api/admin/movies/:id` - Delete movie (204, 403, 404)
+### Users (Admin Only)
+- `GET /api/users` - List all users (200, 403)
+- `PUT /api/users/:id/ban` - Ban user (200, 403, 404)
+- `PUT /api/users/:id/unban` - Unban user (200, 403, 404)
+- `PUT /api/users/:id/promote` - Promote to admin (200, 403, 404, 409)
+- `PUT /api/users/:id/demote` - Demote from admin (200, 403, 404, 409)
 
 ### Network/Error Simulation Endpoints
 - `GET /api/test/slow?delay=ms` - Simulate slow response (200)

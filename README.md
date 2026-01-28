@@ -154,7 +154,10 @@ mockflix/
 
 ### Movies
 - `GET /api/movies` - List movies (pagination, filters)
+- `POST /api/movies` - Add new movie (admin only)
 - `GET /api/movies/:id` - Get movie details
+- `PUT /api/movies/:id` - Update movie (admin only)
+- `DELETE /api/movies/:id` - Delete movie (admin only)
 - `GET /api/movies/search?q=term` - Search movies
 - `GET /api/movies/trending` - Get trending movies
 - `GET /api/movies/:id/similar` - Get similar movies
@@ -175,15 +178,12 @@ mockflix/
 - `POST /api/history/:movieId` - Add to history
 - `PUT /api/history/:movieId/progress` - Update progress
 
-### Admin (Admin Role Required)
-- `GET /api/admin/users` - List all users
-- `PUT /api/admin/users/:id/ban` - Ban a user
-- `PUT /api/admin/users/:id/unban` - Unban a user
-- `PUT /api/admin/users/:id/promote` - Promote user to admin
-- `PUT /api/admin/users/:id/demote` - Demote admin to user
-- `POST /api/admin/movies` - Add new movie
-- `PUT /api/admin/movies/:id` - Update movie
-- `DELETE /api/admin/movies/:id` - Delete movie
+### Users (Admin Only)
+- `GET /api/users` - List all users
+- `PUT /api/users/:id/ban` - Ban a user
+- `PUT /api/users/:id/unban` - Unban a user
+- `PUT /api/users/:id/promote` - Promote user to admin
+- `PUT /api/users/:id/demote` - Demote admin to user
 
 ### Testing/Simulation
 - `GET /api/test/slow?delay=ms` - Simulate slow response

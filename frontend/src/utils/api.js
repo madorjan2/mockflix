@@ -87,41 +87,41 @@ class ApiClient {
 
   // Admin endpoints
   async getUsers() {
-    return this.request('/admin/users');
+    return this.request('/users');
   }
 
   async banUser(userId) {
-    return this.request(`/admin/users/${userId}/ban`, { method: 'PUT' });
+    return this.request(`/users/${userId}/ban`, { method: 'PUT' });
   }
 
   async unbanUser(userId) {
-    return this.request(`/admin/users/${userId}/unban`, { method: 'PUT' });
+    return this.request(`/users/${userId}/unban`, { method: 'PUT' });
   }
 
   async promoteUser(userId) {
-    return this.request(`/admin/users/${userId}/promote`, { method: 'PUT' });
+    return this.request(`/users/${userId}/promote`, { method: 'PUT' });
   }
 
   async demoteUser(userId) {
-    return this.request(`/admin/users/${userId}/demote`, { method: 'PUT' });
+    return this.request(`/users/${userId}/demote`, { method: 'PUT' });
   }
 
   async addMovie(movieData) {
-    return this.request('/admin/movies', {
+    return this.request('/movies', {
       method: 'POST',
       body: JSON.stringify(movieData),
     });
   }
 
   async updateMovie(movieId, movieData) {
-    return this.request(`/admin/movies/${movieId}`, {
+    return this.request(`/movies/${movieId}`, {
       method: 'PUT',
       body: JSON.stringify(movieData),
     });
   }
 
   async deleteMovie(movieId) {
-    return this.request(`/admin/movies/${movieId}`, {
+    return this.request(`/movies/${movieId}`, {
       method: 'DELETE',
     });
   }

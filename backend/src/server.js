@@ -15,7 +15,7 @@ import reviewsRoutes from './routes/reviews.js';
 import watchlistRoutes from './routes/watchlist.js';
 import historyRoutes from './routes/history.js';
 import testRoutes from './routes/test.js';
-import adminRoutes from './routes/admin.js';
+import usersRoutes from './routes/users.js';
 
 // Load environment variables
 dotenv.config();
@@ -56,7 +56,7 @@ const swaggerOptions = {
       { name: 'Reviews', description: 'Movie reviews and ratings' },
       { name: 'Watchlist', description: 'User watchlist management' },
       { name: 'History', description: 'Watch history and progress tracking' },
-      { name: 'Admin', description: 'Admin-only endpoints for managing users and movies' },
+      { name: 'Users', description: 'User management (admin only)' },
       { name: 'Testing', description: 'Network simulation and testing endpoints' }
     ]
   },
@@ -98,13 +98,13 @@ app.get('/health', (req, res) => {
 });
 
 // Routes
-app.use('/api/auth', authRoutes); // Rate limiting disabled for testing
+app.use('/api/auth', authRoutes);
 app.use('/api/movies', moviesRoutes);
 app.use('/api/movies', authenticateToken, reviewsRoutes);
 app.use('/api/reviews', authenticateToken, reviewsRoutes);
 app.use('/api/watchlist', authenticateToken, watchlistRoutes);
 app.use('/api/history', authenticateToken, historyRoutes);
-app.use('/api/admin', authenticateToken, requireAdmin, adminRoutes);
+app.use('/api/users', authenticateToken, usersRoutes);
 app.use('/api/test', testRoutes);
 
 // Protected route for /api/auth/me

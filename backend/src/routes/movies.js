@@ -1,5 +1,6 @@
 import express from 'express';
-import { query, queryOne } from '../db/connection.js';
+import { query, queryOne, run } from '../db/connection.js';
+import { requireAdmin } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -344,6 +345,292 @@ router.get('/:id/similar', (req, res) => {
       success: false,
       error: 'ServerError',
       message: 'Failed to fetch similar movies'
+    });
+  }
+});
+
+/**
+ * @swagger
+ * /api/movies:
+ *   post:
+ *     summary: Add a new movie (admin only)
+ *     tags: [Movies]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               poster_url:
+ *                 type: string
+ *               backdrop_url:
+ *                 type: string
+ *               release_year:
+ *                 type: integer
+ *               rating:
+ *                 type: number
+ *               genres:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               runtime:
+ *                 type: integer
+ *               youtube_video_id:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Movie created successfully
+ *       400:
+ *         description: Validation error
+ *       403:
+ *         description: Admin access required
+ */
+router.post('/', requireAdmin, (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      poster_url,
+      backdrop_url,
+      release_year,
+      rating,
+      genres,
+      runtime,
+      youtube_video_id
+    } = req.body;
+
+    if (!title) {
+      return res.status(400).json({
+        success: false,
+        error: 'ValidationError',
+        message: 'Title is required'
+      });
+    }
+
+    const genresJson = JSON.stringify(genres || []);
+
+    const result = run(
+      `INSERT INTO movies (title, description, poster_url, backdrop_url, release_year, rating, genres, runtime, youtube_video_id)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [title, description, poster_url, backdrop_url, release_year, rating || 0, genresJson, runtime, youtube_video_id]
+    );
+
+    const movie = queryOne('SELECT * FROM movies WHERE id = ?', [result.lastID]);
+    movie.genres = JSON.parse(movie.genres || '[]');
+
+    res.status(201).json({
+      success: true,
+      message: 'Movie created successfully',
+      data: movie
+    });
+  } catch (error) {
+    console.error('Create movie error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'ServerError',
+      message: 'Failed to create movie'
+    });
+  }
+});
+
+/**
+ * @swagger
+ * /api/movies/{id}:
+ *   put:
+ *     summary: Update a movie (admin only)
+ *     tags: [Movies]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               poster_url:
+ *                 type: string
+ *               backdrop_url:
+ *                 type: string
+ *               release_year:
+ *                 type: integer
+ *               rating:
+ *                 type: number
+ *               genres:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               runtime:
+ *                 type: integer
+ *               youtube_video_id:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Movie updated successfully
+ *       403:
+ *         description: Admin access required
+ *       404:
+ *         description: Movie not found
+ */
+router.put('/:id', requireAdmin, (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      title,
+      description,
+      poster_url,
+      backdrop_url,
+      release_year,
+      rating,
+      genres,
+      runtime,
+      youtube_video_id
+    } = req.body;
+
+    const movie = queryOne('SELECT id FROM movies WHERE id = ?', [id]);
+    if (!movie) {
+      return res.status(404).json({
+        success: false,
+        error: 'NotFound',
+        message: 'Movie not found'
+      });
+    }
+
+    const genresJson = genres ? JSON.stringify(genres) : undefined;
+
+    // Build dynamic update query
+    const updates = [];
+    const values = [];
+
+    if (title !== undefined) {
+      updates.push('title = ?');
+      values.push(title);
+    }
+    if (description !== undefined) {
+      updates.push('description = ?');
+      values.push(description);
+    }
+    if (poster_url !== undefined) {
+      updates.push('poster_url = ?');
+      values.push(poster_url);
+    }
+    if (backdrop_url !== undefined) {
+      updates.push('backdrop_url = ?');
+      values.push(backdrop_url);
+    }
+    if (release_year !== undefined) {
+      updates.push('release_year = ?');
+      values.push(release_year);
+    }
+    if (rating !== undefined) {
+      updates.push('rating = ?');
+      values.push(rating);
+    }
+    if (genresJson !== undefined) {
+      updates.push('genres = ?');
+      values.push(genresJson);
+    }
+    if (runtime !== undefined) {
+      updates.push('runtime = ?');
+      values.push(runtime);
+    }
+    if (youtube_video_id !== undefined) {
+      updates.push('youtube_video_id = ?');
+      values.push(youtube_video_id);
+    }
+
+    if (updates.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'ValidationError',
+        message: 'No fields to update'
+      });
+    }
+
+    values.push(id);
+    run(`UPDATE movies SET ${updates.join(', ')} WHERE id = ?`, values);
+
+    const updatedMovie = queryOne('SELECT * FROM movies WHERE id = ?', [id]);
+    updatedMovie.genres = JSON.parse(updatedMovie.genres || '[]');
+
+    res.json({
+      success: true,
+      message: 'Movie updated successfully',
+      data: updatedMovie
+    });
+  } catch (error) {
+    console.error('Update movie error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'ServerError',
+      message: 'Failed to update movie'
+    });
+  }
+});
+
+/**
+ * @swagger
+ * /api/movies/{id}:
+ *   delete:
+ *     summary: Delete a movie (admin only)
+ *     tags: [Movies]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description: Movie deleted successfully
+ *       403:
+ *         description: Admin access required
+ *       404:
+ *         description: Movie not found
+ */
+router.delete('/:id', requireAdmin, (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const movie = queryOne('SELECT id FROM movies WHERE id = ?', [id]);
+    if (!movie) {
+      return res.status(404).json({
+        success: false,
+        error: 'NotFound',
+        message: 'Movie not found'
+      });
+    }
+
+    run('DELETE FROM movies WHERE id = ?', [id]);
+
+    res.status(204).send();
+  } catch (error) {
+    console.error('Delete movie error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'ServerError',
+      message: 'Failed to delete movie'
     });
   }
 });
