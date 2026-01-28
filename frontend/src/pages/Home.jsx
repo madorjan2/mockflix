@@ -40,11 +40,13 @@ const Home = () => {
         api.getMovies(filters),
         searchQuery ? Promise.resolve({ data: [] }) : api.getTrendingMovies(),
       ]);
-      setMovies(moviesRes.data.movies || []);
-      setTrendingMovies(trendingRes.data || []);
+      setMovies(moviesRes?.data?.movies || []);
+      setTrendingMovies(trendingRes?.data || []);
     } catch (err) {
-      setError('Failed to load movies');
-      console.error(err);
+      setError('Failed to load movies. Please make sure the backend is running.');
+      console.error('Load movies error:', err);
+      setMovies([]);
+      setTrendingMovies([]);
     } finally {
       setLoading(false);
     }
@@ -60,11 +62,12 @@ const Home = () => {
     setError('');
     try {
       const response = await api.searchMovies(searchQuery);
-      setMovies(response.data.movies || []);
+      setMovies(response?.data?.movies || []);
       setTrendingMovies([]);
     } catch (err) {
       setError('Search failed');
-      console.error(err);
+      console.error('Search error:', err);
+      setMovies([]);
     } finally {
       setLoading(false);
     }
