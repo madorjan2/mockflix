@@ -1,0 +1,242 @@
+.movie-details-page {
+  min-height: 100vh;
+}
+
+.movie-backdrop {
+  background-size: cover;
+  background-position: center;
+  padding: 4rem 0;
+  margin-bottom: 3rem;
+}
+
+.movie-header {
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
+}
+
+.movie-poster {
+  width: 300px;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.movie-info {
+  flex: 1;
+}
+
+.movie-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.movie-meta {
+  display: flex;
+  gap: 1.5rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.movie-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.genre-badge {
+  padding: 0.5rem 1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.movie-description {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+.movie-actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.btn-watch,
+.btn-watchlist {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-watch {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-watch:hover {
+  background-color: var(--primary-dark);
+  transform: scale(1.05);
+}
+
+.btn-watchlist {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-watchlist:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-watchlist.active {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.user-rating h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.star-button {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.star-button:hover,
+.star-button.filled {
+  color: #ffd700;
+}
+
+.reviews-section,
+.similar-section {
+  margin-top: 3rem;
+  padding: 2rem 0;
+}
+
+.section-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.review-form {
+  background-color: var(--bg-light);
+  padding: 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.review-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.review-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.review-form select,
+.review-form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.review-form textarea {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.review-card {
+  background-color: var(--bg-light);
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.review-author {
+  font-weight: 600;
+}
+
+.review-rating {
+  color: #ffd700;
+}
+
+.review-text {
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.review-date {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.no-reviews {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .movie-header {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .movie-poster {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .movie-title {
+    font-size: 2rem;
+  }
+
+  .movie-actions {
+    flex-direction: column;
+  }
+
+  .btn-watch,
+  .btn-watchlist {
+    width: 100%;
+  }
+}
