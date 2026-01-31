@@ -1,5 +1,6 @@
 import express from 'express';
 import { query, queryOne, run } from '../db/connection.js';
+import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -169,7 +170,7 @@ router.get('/:id/reviews', (req, res) => {
  *               error: Conflict
  *               message: You have already reviewed this movie
  */
-router.post('/:id/reviews', (req, res) => {
+router.post('/:id/reviews', authenticateToken, (req, res) => {
   try {
     const movieId = parseInt(req.params.id);
     const userId = req.user.id;
@@ -325,7 +326,7 @@ router.post('/:id/reviews', (req, res) => {
  *               error: NotFound
  *               message: Review not found
  */
-router.put('/:id', (req, res) => {
+router.put('/:id', authenticateToken, (req, res) => {
   try {
     const reviewId = parseInt(req.params.id);
     const userId = req.user.id;
@@ -450,7 +451,7 @@ router.put('/:id', (req, res) => {
  *               error: NotFound
  *               message: Review not found
  */
-router.delete('/:id', (req, res) => {
+router.delete('/:id', authenticateToken, (req, res) => {
   try {
     const reviewId = parseInt(req.params.id);
     const userId = req.user.id;

@@ -260,8 +260,8 @@ app.get('/health', (req, res) => {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/movies', moviesRoutes);
-app.use('/api/movies', authenticateToken, reviewsRoutes);
-app.use('/api/reviews', authenticateToken, reviewsRoutes);
+app.use('/api/movies', reviewsRoutes);
+app.use('/api/reviews', reviewsRoutes);
 app.use('/api/watchlist', authenticateToken, watchlistRoutes);
 app.use('/api/history', authenticateToken, historyRoutes);
 app.use('/api/users', authenticateToken, usersRoutes);
