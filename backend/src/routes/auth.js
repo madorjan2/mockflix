@@ -40,22 +40,7 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: User registered successfully
- *                 data:
- *                   type: object
- *                   properties:
- *                     user:
- *                       $ref: '#/components/schemas/UserDTO'
- *                     token:
- *                       type: string
- *                       example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *               $ref: '#/components/schemas/AuthResponseDTO'
  *       400:
  *         description: Validation error
  *         content:
@@ -169,22 +154,7 @@ router.post('/register', async (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: Login successful
- *                 data:
- *                   type: object
- *                   properties:
- *                     user:
- *                       $ref: '#/components/schemas/UserDTO'
- *                     token:
- *                       type: string
- *                       example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *               $ref: '#/components/schemas/AuthResponseDTO'
  *       401:
  *         description: Invalid credentials
  *         content:
@@ -292,8 +262,16 @@ router.post('/login', async (req, res) => {
  *     responses:
  *       200:
  *         description: Current user data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserResponseDTO'
  *       401:
  *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  */
 router.get('/me', authenticateToken, (req, res) => {
   const user = queryOne(

@@ -52,6 +52,7 @@ const swaggerOptions = {
       },
       schemas: {
         UserDTO: {
+          title: 'UserDTO',
           type: 'object',
           properties: {
             id: { type: 'integer', example: 1 },
@@ -64,6 +65,7 @@ const swaggerOptions = {
           }
         },
         MovieDTO: {
+          title: 'MovieDTO',
           type: 'object',
           properties: {
             id: { type: 'integer', example: 1 },
@@ -78,6 +80,7 @@ const swaggerOptions = {
           }
         },
         ReviewDTO: {
+          title: 'ReviewDTO',
           type: 'object',
           properties: {
             id: { type: 'integer', example: 1 },
@@ -91,6 +94,7 @@ const swaggerOptions = {
           }
         },
         WatchlistItemDTO: {
+          title: 'WatchlistItemDTO',
           type: 'object',
           properties: {
             id: { type: 'integer', example: 1 },
@@ -103,6 +107,7 @@ const swaggerOptions = {
           }
         },
         HistoryItemDTO: {
+          title: 'HistoryItemDTO',
           type: 'object',
           properties: {
             id: { type: 'integer', example: 1 },
@@ -115,7 +120,76 @@ const swaggerOptions = {
             poster_url: { type: 'string', example: 'https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg' }
           }
         },
+        AuthResponseDTO: {
+          title: 'AuthResponseDTO',
+          type: 'object',
+          properties: {
+            success: { type: 'boolean', example: true },
+            message: { type: 'string', example: 'User registered successfully' },
+            data: {
+              type: 'object',
+              properties: {
+                user: { $ref: '#/components/schemas/UserDTO' },
+                token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' }
+              }
+            }
+          }
+        },
+        UserResponseDTO: {
+          title: 'UserResponseDTO',
+          type: 'object',
+          properties: {
+            success: { type: 'boolean', example: true },
+            data: { $ref: '#/components/schemas/UserDTO' }
+          }
+        },
+        MovieResponseDTO: {
+          title: 'MovieResponseDTO',
+          type: 'object',
+          properties: {
+            success: { type: 'boolean', example: true },
+            message: { type: 'string', example: 'Movie created successfully' },
+            data: { $ref: '#/components/schemas/MovieDTO' }
+          }
+        },
+        MoviesListResponseDTO: {
+          title: 'MoviesListResponseDTO',
+          type: 'object',
+          properties: {
+            success: { type: 'boolean', example: true },
+            data: {
+              type: 'object',
+              properties: {
+                movies: {
+                  type: 'array',
+                  items: { $ref: '#/components/schemas/MovieDTO' }
+                },
+                pagination: {
+                  type: 'object',
+                  properties: {
+                    page: { type: 'integer', example: 1 },
+                    limit: { type: 'integer', example: 20 },
+                    total: { type: 'integer', example: 100 },
+                    totalPages: { type: 'integer', example: 5 }
+                  }
+                }
+              }
+            }
+          }
+        },
+        ReviewsListResponseDTO: {
+          title: 'ReviewsListResponseDTO',
+          type: 'object',
+          properties: {
+            success: { type: 'boolean', example: true },
+            data: {
+              type: 'array',
+              items: { $ref: '#/components/schemas/ReviewDTO' }
+            }
+          }
+        },
         SuccessResponseDTO: {
+          title: 'SuccessResponseDTO',
           type: 'object',
           properties: {
             success: { type: 'boolean', example: true },
@@ -124,11 +198,12 @@ const swaggerOptions = {
           }
         },
         ErrorResponseDTO: {
+          title: 'ErrorResponseDTO',
           type: 'object',
           properties: {
             success: { type: 'boolean', example: false },
-            error: { type: 'string', example: 'ErrorType' },
-            message: { type: 'string', example: 'Error message' },
+            error: { type: 'string', example: 'ValidationError' },
+            message: { type: 'string', example: 'Email, password, and username are required' },
             details: { type: 'object' }
           }
         }
