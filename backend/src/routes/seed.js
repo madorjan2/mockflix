@@ -25,10 +25,63 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: Database reset successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Database reset to default state successfully
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     users:
+ *                       type: integer
+ *                       example: 5
+ *                     movies:
+ *                       type: integer
+ *                       example: 20
+ *                     reviews:
+ *                       type: integer
+ *                       example: 10
+ *                     watchlist:
+ *                       type: integer
+ *                       example: 9
+ *                     history:
+ *                       type: integer
+ *                       example: 6
  *       403:
  *         description: Admin access required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Forbidden
+ *               message: Admin access required
  *       500:
  *         description: Reset failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: ServerError
+ *                 message:
+ *                   type: string
+ *                   example: Failed to reset database
+ *                 details:
+ *                   type: string
  */
 router.post('/reset', authenticateToken, requireAdmin, async (req, res) => {
   try {
@@ -75,10 +128,51 @@ router.post('/reset', authenticateToken, requireAdmin, async (req, res) => {
  *     responses:
  *       200:
  *         description: Users reset successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Users reset to default state successfully
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     users:
+ *                       type: integer
+ *                       example: 5
  *       403:
  *         description: Admin access required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Forbidden
+ *               message: Admin access required
  *       500:
  *         description: Reset failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: ServerError
+ *                 message:
+ *                   type: string
+ *                   example: Failed to reset users
+ *                 details:
+ *                   type: string
  */
 router.post('/reset-users', authenticateToken, requireAdmin, async (req, res) => {
   try {
@@ -141,10 +235,51 @@ router.post('/reset-users', authenticateToken, requireAdmin, async (req, res) =>
  *     responses:
  *       200:
  *         description: Movies reset successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Movies reset to default state successfully
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     movies:
+ *                       type: integer
+ *                       example: 20
  *       403:
  *         description: Admin access required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Forbidden
+ *               message: Admin access required
  *       500:
  *         description: Reset failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: ServerError
+ *                 message:
+ *                   type: string
+ *                   example: Failed to reset movies
+ *                 details:
+ *                   type: string
  */
 router.post('/reset-movies', authenticateToken, requireAdmin, async (req, res) => {
   try {

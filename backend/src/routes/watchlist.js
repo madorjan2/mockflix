@@ -14,8 +14,28 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: User's watchlist
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/WatchlistItem'
  *       401:
  *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Unauthorized
+ *               message: Token is required
  */
 router.get('/', (req, res) => {
   try {
@@ -59,15 +79,63 @@ router.get('/', (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
+ *         example: 1
  *     responses:
  *       201:
  *         description: Movie added to watchlist
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Movie added to watchlist
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     movie_id:
+ *                       type: integer
+ *                       example: 1
+ *                     title:
+ *                       type: string
+ *                       example: Fight Club
  *       401:
  *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Unauthorized
+ *               message: Token is required
  *       404:
  *         description: Movie not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: NotFound
+ *               message: Movie not found
  *       409:
  *         description: Movie already in watchlist
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Conflict
+ *               message: Movie already in watchlist
  */
 router.post('/:movieId', (req, res) => {
   try {
@@ -137,13 +205,30 @@ router.post('/:movieId', (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
+ *         example: 1
  *     responses:
  *       204:
  *         description: Movie removed from watchlist
  *       401:
  *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Unauthorized
+ *               message: Token is required
  *       404:
  *         description: Movie not in watchlist
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: NotFound
+ *               message: Movie not in watchlist
  */
 router.delete('/:movieId', (req, res) => {
   try {

@@ -15,8 +15,28 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: List of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/User'
  *       403:
  *         description: Admin access required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Forbidden
+ *               message: Admin access required
  */
 router.get('/', requireAdmin, (req, res) => {
   try {
@@ -52,13 +72,53 @@ router.get('/', requireAdmin, (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
+ *         example: 2
  *     responses:
  *       200:
  *         description: User banned successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: User banned successfully
+ *                 data:
+ *                   $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Cannot ban admin users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: BadRequest
+ *               message: Cannot ban admin users
  *       403:
  *         description: Admin access required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Forbidden
+ *               message: Admin access required
  *       404:
  *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: NotFound
+ *               message: User not found
  */
 router.put('/:id/ban', requireAdmin, (req, res) => {
   try {
@@ -119,13 +179,43 @@ router.put('/:id/ban', requireAdmin, (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
+ *         example: 2
  *     responses:
  *       200:
  *         description: User unbanned successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: User unbanned successfully
+ *                 data:
+ *                   $ref: '#/components/schemas/User'
  *       403:
  *         description: Admin access required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Forbidden
+ *               message: Admin access required
  *       404:
  *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: NotFound
+ *               message: User not found
  */
 router.put('/:id/unban', requireAdmin, (req, res) => {
   try {
@@ -176,15 +266,53 @@ router.put('/:id/unban', requireAdmin, (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
+ *         example: 2
  *     responses:
  *       200:
  *         description: User promoted to admin
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: User promoted to admin successfully
+ *                 data:
+ *                   $ref: '#/components/schemas/User'
  *       403:
  *         description: Admin access required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Forbidden
+ *               message: Admin access required
  *       404:
  *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: NotFound
+ *               message: User not found
  *       409:
  *         description: User is already admin
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Conflict
+ *               message: User is already an admin
  */
 router.put('/:id/promote', requireAdmin, (req, res) => {
   try {
@@ -243,15 +371,53 @@ router.put('/:id/promote', requireAdmin, (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
+ *         example: 3
  *     responses:
  *       200:
  *         description: Admin demoted to user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: User demoted to regular user
+ *                 data:
+ *                   $ref: '#/components/schemas/User'
  *       403:
  *         description: Admin access required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Forbidden
+ *               message: Admin access required
  *       404:
  *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: NotFound
+ *               message: User not found
  *       409:
  *         description: User is already a regular user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Conflict
+ *               message: User is already a regular user
  */
 router.put('/:id/demote', requireAdmin, (req, res) => {
   try {

@@ -16,9 +16,27 @@ const router = express.Router();
  *           type: integer
  *           default: 3000
  *         description: Delay in milliseconds
+ *         example: 2000
  *     responses:
  *       200:
  *         description: Delayed response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Response delayed by 3000ms
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     delay:
+ *                       type: integer
+ *                       example: 3000
  */
 router.get('/slow', (req, res) => {
   const delay = parseInt(req.query.delay) || 3000;
@@ -41,6 +59,14 @@ router.get('/slow', (req, res) => {
  *     responses:
  *       503:
  *         description: Service unavailable
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: ServiceUnavailable
+ *               message: Request timed out
  */
 router.get('/timeout', (req, res) => {
   setTimeout(() => {
@@ -65,9 +91,25 @@ router.get('/timeout', (req, res) => {
  *         schema:
  *           type: integer
  *         description: HTTP status code to return
+ *         example: 404
  *     responses:
  *       default:
  *         description: Custom status code response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             examples:
+ *               404:
+ *                 value:
+ *                   success: false
+ *                   error: NotFound
+ *                   message: 'Test error: Not Found'
+ *               500:
+ *                 value:
+ *                   success: false
+ *                   error: InternalServerError
+ *                   message: 'Test error: Internal Server Error'
  */
 router.get('/error/:code', (req, res) => {
   const code = parseInt(req.params.code);
@@ -102,6 +144,14 @@ router.get('/error/:code', (req, res) => {
  *     responses:
  *       429:
  *         description: Too many requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: TooManyRequests
+ *               message: Rate limit exceeded. Please try again later.
  */
 router.get('/rate-limit', triggerRateLimit);
 

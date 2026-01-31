@@ -25,19 +25,57 @@ const router = express.Router();
  *               email:
  *                 type: string
  *                 format: email
+ *                 example: newuser@example.com
  *               password:
  *                 type: string
  *                 minLength: 6
+ *                 example: password123
  *               username:
  *                 type: string
  *                 minLength: 3
+ *                 example: johndoe
  *     responses:
  *       201:
  *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: User registered successfully
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     user:
+ *                       $ref: '#/components/schemas/User'
+ *                     token:
+ *                       type: string
+ *                       example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
  *       400:
  *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: ValidationError
+ *               message: Email, password, and username are required
  *       409:
  *         description: Email already exists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Conflict
+ *               message: Email already registered
  */
 router.post('/register', async (req, res) => {
   try {
@@ -121,15 +159,62 @@ router.post('/register', async (req, res) => {
  *               email:
  *                 type: string
  *                 format: email
+ *                 example: test@example.com
  *               password:
  *                 type: string
+ *                 example: password123
  *     responses:
  *       200:
  *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Login successful
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     user:
+ *                       $ref: '#/components/schemas/User'
+ *                     token:
+ *                       type: string
+ *                       example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
  *       401:
  *         description: Invalid credentials
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Unauthorized
+ *               message: Invalid email or password
+ *       403:
+ *         description: User is banned
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Forbidden
+ *               message: Your account has been banned
  *       422:
  *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: ValidationError
+ *               message: Email and password are required
  */
 router.post('/login', async (req, res) => {
   try {
@@ -161,6 +246,7 @@ router.post('/login', async (req, res) => {
         message: 'Your account has been banned'
       });
     }
+
     // Check password
     const validPassword = await bcrypt.compare(password, user.password_hash);
     if (!validPassword) {
@@ -240,6 +326,17 @@ router.get('/me', authenticateToken, (req, res) => {
  *     responses:
  *       200:
  *         description: Logout successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Logout successful
  */
 router.post('/logout', (req, res) => {
   // For JWT, logout is handled client-side by removing the token
@@ -260,10 +357,39 @@ router.post('/logout', (req, res) => {
  *     responses:
  *       200:
  *         description: User upgraded to premium
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: User upgraded to premium
+ *                 data:
+ *                   $ref: '#/components/schemas/User'
  *       401:
  *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Unauthorized
+ *               message: Not authenticated
  *       409:
  *         description: Already premium
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Conflict
+ *               message: User is already premium
  */
 router.post('/upgrade', (req, res) => {
   if (!req.user) {
@@ -327,10 +453,39 @@ router.post('/upgrade', (req, res) => {
  *     responses:
  *       200:
  *         description: User downgraded to free
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Downgraded to free tier
+ *                 data:
+ *                   $ref: '#/components/schemas/User'
  *       401:
  *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Unauthorized
+ *               message: Not authenticated
  *       409:
  *         description: Already free
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Conflict
+ *               message: User is already on free tier
  */
 router.post('/downgrade', (req, res) => {
   if (!req.user) {

@@ -16,29 +16,72 @@ const router = express.Router();
  *         schema:
  *           type: integer
  *           default: 1
+ *         example: 1
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
  *           default: 20
+ *         example: 20
  *       - in: query
  *         name: genre
  *         schema:
  *           type: string
+ *         example: Action
  *       - in: query
  *         name: year
  *         schema:
  *           type: integer
+ *         example: 2020
  *       - in: query
  *         name: sort
  *         schema:
  *           type: string
  *           enum: [rating, year, title]
+ *         example: rating
  *     responses:
  *       200:
- *         description: List of movies
+ *         description: List of movies with pagination
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     movies:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/Movie'
+ *                     pagination:
+ *                       type: object
+ *                       properties:
+ *                         page:
+ *                           type: integer
+ *                           example: 1
+ *                         limit:
+ *                           type: integer
+ *                           example: 20
+ *                         total:
+ *                           type: integer
+ *                           example: 100
+ *                         totalPages:
+ *                           type: integer
+ *                           example: 5
  *       400:
  *         description: Invalid parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: ValidationError
+ *               message: Invalid parameters
  */
 router.get('/', (req, res) => {
   try {
@@ -130,11 +173,38 @@ router.get('/', (req, res) => {
  *         required: true
  *         schema:
  *           type: string
+ *         example: fight club
  *     responses:
  *       200:
  *         description: Search results
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     movies:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/Movie'
+ *                     count:
+ *                       type: integer
+ *                       example: 5
  *       400:
  *         description: Missing search query
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: ValidationError
+ *               message: Search query is required
  */
 router.get('/search', (req, res) => {
   try {
@@ -231,11 +301,39 @@ router.get('/trending', (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
+ *         example: 1
  *     responses:
  *       200:
  *         description: Movie details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   allOf:
+ *                     - $ref: '#/components/schemas/Movie'
+ *                     - type: object
+ *                       properties:
+ *                         review_count:
+ *                           type: integer
+ *                           example: 25
+ *                         user_avg_rating:
+ *                           type: number
+ *                           example: 4.2
  *       404:
  *         description: Movie not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: NotFound
+ *               message: Movie not found
  */
 router.get('/:id', (req, res) => {
   try {
@@ -296,11 +394,32 @@ router.get('/:id', (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
+ *         example: 1
  *     responses:
  *       200:
  *         description: List of similar movies
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Movie'
  *       404:
  *         description: Movie not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: NotFound
+ *               message: Movie not found
  */
 router.get('/:id/similar', (req, res) => {
   try {
@@ -368,31 +487,69 @@ router.get('/:id/similar', (req, res) => {
  *             properties:
  *               title:
  *                 type: string
+ *                 example: Inception
  *               description:
  *                 type: string
+ *                 example: A thief who steals corporate secrets through dream-sharing technology
  *               poster_url:
  *                 type: string
+ *                 example: https://image.tmdb.org/t/p/w500/example.jpg
  *               backdrop_url:
  *                 type: string
+ *                 example: https://image.tmdb.org/t/p/original/example.jpg
  *               release_year:
  *                 type: integer
+ *                 example: 2010
  *               rating:
  *                 type: number
+ *                 example: 8.8
  *               genres:
  *                 type: array
  *                 items:
  *                   type: string
+ *                 example: ["Action", "Sci-Fi", "Thriller"]
  *               runtime:
  *                 type: integer
+ *                 example: 148
  *               youtube_video_id:
  *                 type: string
+ *                 example: dQw4w9WgXcQ
  *     responses:
  *       201:
  *         description: Movie created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Movie created successfully
+ *                 data:
+ *                   $ref: '#/components/schemas/Movie'
  *       400:
  *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: ValidationError
+ *               message: Title is required
  *       403:
  *         description: Admin access required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Forbidden
+ *               message: Admin access required
  */
 router.post('/', authenticateToken, requireAdmin, (req, res) => {
   try {
@@ -456,6 +613,7 @@ router.post('/', authenticateToken, requireAdmin, (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
+ *         example: 1
  *     requestBody:
  *       required: true
  *       content:
@@ -465,31 +623,66 @@ router.post('/', authenticateToken, requireAdmin, (req, res) => {
  *             properties:
  *               title:
  *                 type: string
+ *                 example: Updated Movie Title
  *               description:
  *                 type: string
+ *                 example: Updated movie description
  *               poster_url:
  *                 type: string
  *               backdrop_url:
  *                 type: string
  *               release_year:
  *                 type: integer
+ *                 example: 2023
  *               rating:
  *                 type: number
+ *                 example: 8.5
  *               genres:
  *                 type: array
  *                 items:
  *                   type: string
+ *                 example: ["Action", "Drama"]
  *               runtime:
  *                 type: integer
+ *                 example: 120
  *               youtube_video_id:
  *                 type: string
  *     responses:
  *       200:
  *         description: Movie updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Movie updated successfully
+ *                 data:
+ *                   $ref: '#/components/schemas/Movie'
  *       403:
  *         description: Admin access required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Forbidden
+ *               message: Admin access required
  *       404:
  *         description: Movie not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: NotFound
+ *               message: Movie not found
  */
 router.put('/:id', authenticateToken, requireAdmin, (req, res) => {
   try {
@@ -601,13 +794,30 @@ router.put('/:id', authenticateToken, requireAdmin, (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
+ *         example: 1
  *     responses:
  *       204:
  *         description: Movie deleted successfully
  *       403:
  *         description: Admin access required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Forbidden
+ *               message: Admin access required
  *       404:
  *         description: Movie not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: NotFound
+ *               message: Movie not found
  */
 router.delete('/:id', authenticateToken, requireAdmin, (req, res) => {
   try {

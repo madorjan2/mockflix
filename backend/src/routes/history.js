@@ -14,8 +14,28 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: User's watch history
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/HistoryItem'
  *       401:
  *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Unauthorized
+ *               message: Token is required
  */
 router.get('/', (req, res) => {
   try {
@@ -59,13 +79,53 @@ router.get('/', (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
+ *         example: 1
  *     responses:
  *       201:
  *         description: Movie added to history
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Movie added to watch history
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     movie_id:
+ *                       type: integer
+ *                       example: 1
+ *                     title:
+ *                       type: string
+ *                       example: Fight Club
  *       401:
  *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Unauthorized
+ *               message: Token is required
  *       404:
  *         description: Movie not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: NotFound
+ *               message: Movie not found
  */
 router.post('/:movieId', (req, res) => {
   try {
@@ -121,6 +181,7 @@ router.post('/:movieId', (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
+ *         example: 1
  *     requestBody:
  *       required: true
  *       content:
@@ -133,15 +194,53 @@ router.post('/:movieId', (req, res) => {
  *               progress_seconds:
  *                 type: integer
  *                 minimum: 0
+ *                 example: 3600
  *               completed:
  *                 type: boolean
+ *                 example: false
  *     responses:
  *       200:
  *         description: Progress updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Progress updated successfully
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     progress_seconds:
+ *                       type: integer
+ *                       example: 3600
+ *                     completed:
+ *                       type: boolean
+ *                       example: false
  *       401:
  *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Unauthorized
+ *               message: Token is required
  *       404:
  *         description: Movie not in history
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: NotFound
+ *               message: Movie not in watch history
  */
 router.put('/:movieId/progress', (req, res) => {
   try {

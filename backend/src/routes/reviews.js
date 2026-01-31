@@ -15,11 +15,32 @@ const router = express.Router();
  *         required: true
  *         schema:
  *           type: integer
+ *         example: 1
  *     responses:
  *       200:
  *         description: List of reviews
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Review'
  *       404:
  *         description: Movie not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: NotFound
+ *               message: Movie not found
  */
 router.get('/:id/reviews', (req, res) => {
   try {
@@ -73,6 +94,7 @@ router.get('/:id/reviews', (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
+ *         example: 1
  *     requestBody:
  *       required: true
  *       content:
@@ -86,19 +108,66 @@ router.get('/:id/reviews', (req, res) => {
  *                 type: integer
  *                 minimum: 1
  *                 maximum: 10
+ *                 example: 8
  *               review_text:
  *                 type: string
+ *                 example: Amazing movie! Must watch.
  *     responses:
  *       201:
  *         description: Review created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Review created successfully
+ *                 data:
+ *                   $ref: '#/components/schemas/Review'
  *       400:
  *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: ValidationError
+ *               message: Rating must be between 1 and 10
  *       401:
  *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Unauthorized
+ *               message: Token is required
  *       404:
  *         description: Movie not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: NotFound
+ *               message: Movie not found
  *       409:
  *         description: User already reviewed this movie
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Conflict
+ *               message: You have already reviewed this movie
  */
 router.post('/:id/reviews', (req, res) => {
   try {
@@ -183,6 +252,7 @@ router.post('/:id/reviews', (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
+ *         example: 1
  *     requestBody:
  *       required: true
  *       content:
@@ -194,19 +264,66 @@ router.post('/:id/reviews', (req, res) => {
  *                 type: integer
  *                 minimum: 1
  *                 maximum: 10
+ *                 example: 9
  *               review_text:
  *                 type: string
+ *                 example: Updated review text - even better on rewatch!
  *     responses:
  *       200:
  *         description: Review updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Review updated successfully
+ *                 data:
+ *                   $ref: '#/components/schemas/Review'
  *       400:
  *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: ValidationError
+ *               message: Rating must be between 1 and 10
  *       401:
  *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Unauthorized
+ *               message: Token is required
  *       403:
  *         description: Not authorized to update this review
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Forbidden
+ *               message: You can only update your own reviews
  *       404:
  *         description: Review not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: NotFound
+ *               message: Review not found
  */
 router.put('/:id', (req, res) => {
   try {
@@ -298,15 +415,40 @@ router.put('/:id', (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
+ *         example: 1
  *     responses:
  *       204:
  *         description: Review deleted
  *       401:
  *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Unauthorized
+ *               message: Token is required
  *       403:
  *         description: Not authorized to delete this review
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: Forbidden
+ *               message: You can only delete your own reviews
  *       404:
  *         description: Review not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error: NotFound
+ *               message: Review not found
  */
 router.delete('/:id', (req, res) => {
   try {

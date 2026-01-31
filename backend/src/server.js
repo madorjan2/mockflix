@@ -49,6 +49,89 @@ const swaggerOptions = {
           scheme: 'bearer',
           bearerFormat: 'JWT'
         }
+      },
+      schemas: {
+        User: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 1 },
+            email: { type: 'string', format: 'email', example: 'user@example.com' },
+            username: { type: 'string', example: 'johndoe' },
+            subscription_tier: { type: 'string', enum: ['free', 'premium'], example: 'free' },
+            role: { type: 'string', enum: ['user', 'admin'], example: 'user' },
+            is_banned: { type: 'boolean', example: false },
+            created_at: { type: 'string', format: 'date-time', example: '2024-01-15T10:30:00Z' }
+          }
+        },
+        Movie: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 1 },
+            tmdb_id: { type: 'integer', example: 550 },
+            title: { type: 'string', example: 'Fight Club' },
+            description: { type: 'string', example: 'An insomniac office worker and a devil-may-care soap maker form an underground fight club.' },
+            poster_url: { type: 'string', example: 'https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg' },
+            release_year: { type: 'integer', example: 1999 },
+            rating: { type: 'number', format: 'float', example: 8.4 },
+            genres: { type: 'array', items: { type: 'string' }, example: ['Drama', 'Thriller'] },
+            youtube_video_id: { type: 'string', example: 'dQw4w9WgXcQ' }
+          }
+        },
+        Review: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 1 },
+            user_id: { type: 'integer', example: 1 },
+            movie_id: { type: 'integer', example: 1 },
+            rating: { type: 'integer', minimum: 1, maximum: 5, example: 4 },
+            review_text: { type: 'string', example: 'Great movie! Highly recommend.' },
+            created_at: { type: 'string', format: 'date-time', example: '2024-01-15T10:30:00Z' },
+            updated_at: { type: 'string', format: 'date-time', example: '2024-01-15T11:00:00Z' },
+            username: { type: 'string', example: 'johndoe' }
+          }
+        },
+        WatchlistItem: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 1 },
+            user_id: { type: 'integer', example: 1 },
+            movie_id: { type: 'integer', example: 1 },
+            added_at: { type: 'string', format: 'date-time', example: '2024-01-15T10:30:00Z' },
+            title: { type: 'string', example: 'Fight Club' },
+            poster_url: { type: 'string', example: 'https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg' },
+            rating: { type: 'number', format: 'float', example: 8.4 }
+          }
+        },
+        HistoryItem: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 1 },
+            user_id: { type: 'integer', example: 1 },
+            movie_id: { type: 'integer', example: 1 },
+            watched_at: { type: 'string', format: 'date-time', example: '2024-01-15T10:30:00Z' },
+            progress_seconds: { type: 'integer', example: 3600 },
+            completed: { type: 'boolean', example: false },
+            title: { type: 'string', example: 'Fight Club' },
+            poster_url: { type: 'string', example: 'https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg' }
+          }
+        },
+        SuccessResponse: {
+          type: 'object',
+          properties: {
+            success: { type: 'boolean', example: true },
+            message: { type: 'string', example: 'Operation successful' },
+            data: { type: 'object' }
+          }
+        },
+        ErrorResponse: {
+          type: 'object',
+          properties: {
+            success: { type: 'boolean', example: false },
+            error: { type: 'string', example: 'ErrorType' },
+            message: { type: 'string', example: 'Error message' },
+            details: { type: 'object' }
+          }
+        }
       }
     },
     tags: [
@@ -58,7 +141,8 @@ const swaggerOptions = {
       { name: 'Watchlist', description: 'User watchlist management' },
       { name: 'History', description: 'Watch history and progress tracking' },
       { name: 'Users', description: 'User management (admin only)' },
-      { name: 'Testing', description: 'Network simulation and testing endpoints' }
+      { name: 'Testing', description: 'Network simulation and testing endpoints' },
+      { name: 'Seed/Reset', description: 'Database reset operations (admin only)' }
     ]
   },
   apis: ['./src/routes/*.js']
