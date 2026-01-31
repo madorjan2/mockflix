@@ -130,6 +130,19 @@ export function run(sql, params = []) {
 }
 
 /**
+ * Reload the database from disk (useful after external modifications)
+ */
+export async function reloadDatabase() {
+  if (db) {
+    db.close();
+    db = null;
+  }
+  
+  await initDatabase();
+  console.log('🔄 Database reloaded from disk');
+}
+
+/**
  * Close the database connection
  */
 export function closeDatabase() {

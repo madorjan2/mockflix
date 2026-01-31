@@ -5,7 +5,7 @@ import { promisify } from 'util';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
-import { getDatabase, run, saveDatabase } from '../db/connection.js';
+import { getDatabase, run, saveDatabase, reloadDatabase } from '../db/connection.js';
 import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -92,6 +92,9 @@ router.post('/reset', authenticateToken, requireAdmin, async (req, res) => {
     await execPromise(`node "${seedScriptPath}"`, {
       cwd: path.join(__dirname, '..', '..')
     });
+
+    // CRITICAL: Reload the database in the main process to pick up the changes
+    await reloadDatabase();
 
     console.log('✅ Full database reset complete');
     
