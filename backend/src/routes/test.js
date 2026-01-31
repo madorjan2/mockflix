@@ -62,7 +62,7 @@ router.get('/slow', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: ServiceUnavailable
@@ -98,7 +98,7 @@ router.get('/timeout', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             examples:
  *               404:
  *                 value:
@@ -147,7 +147,7 @@ router.get('/error/:code', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: TooManyRequests

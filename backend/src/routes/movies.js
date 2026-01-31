@@ -56,7 +56,7 @@ const router = express.Router();
  *                     movies:
  *                       type: array
  *                       items:
- *                         $ref: '#/components/schemas/Movie'
+ *                         $ref: '#/components/schemas/MovieDTO'
  *                     pagination:
  *                       type: object
  *                       properties:
@@ -77,7 +77,7 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: ValidationError
@@ -191,7 +191,7 @@ router.get('/', (req, res) => {
  *                     movies:
  *                       type: array
  *                       items:
- *                         $ref: '#/components/schemas/Movie'
+ *                         $ref: '#/components/schemas/MovieDTO'
  *                     count:
  *                       type: integer
  *                       example: 5
@@ -200,7 +200,7 @@ router.get('/', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: ValidationError
@@ -315,7 +315,7 @@ router.get('/trending', (req, res) => {
  *                   example: true
  *                 data:
  *                   allOf:
- *                     - $ref: '#/components/schemas/Movie'
+ *                     - $ref: '#/components/schemas/MovieDTO'
  *                     - type: object
  *                       properties:
  *                         review_count:
@@ -329,7 +329,7 @@ router.get('/trending', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: NotFound
@@ -409,13 +409,13 @@ router.get('/:id', (req, res) => {
  *                 data:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Movie'
+ *                     $ref: '#/components/schemas/MovieDTO'
  *       404:
  *         description: Movie not found
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: NotFound
@@ -529,13 +529,13 @@ router.get('/:id/similar', (req, res) => {
  *                   type: string
  *                   example: Movie created successfully
  *                 data:
- *                   $ref: '#/components/schemas/Movie'
+ *                   $ref: '#/components/schemas/MovieDTO'
  *       400:
  *         description: Validation error
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: ValidationError
@@ -545,7 +545,7 @@ router.get('/:id/similar', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Forbidden
@@ -662,13 +662,13 @@ router.post('/', authenticateToken, requireAdmin, (req, res) => {
  *                   type: string
  *                   example: Movie updated successfully
  *                 data:
- *                   $ref: '#/components/schemas/Movie'
+ *                   $ref: '#/components/schemas/MovieDTO'
  *       403:
  *         description: Admin access required
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Forbidden
@@ -678,7 +678,7 @@ router.post('/', authenticateToken, requireAdmin, (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: NotFound
@@ -803,7 +803,7 @@ router.put('/:id', authenticateToken, requireAdmin, (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Forbidden
@@ -813,7 +813,7 @@ router.put('/:id', authenticateToken, requireAdmin, (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: NotFound

@@ -52,7 +52,7 @@ const router = express.Router();
  *                   type: object
  *                   properties:
  *                     user:
- *                       $ref: '#/components/schemas/User'
+ *                       $ref: '#/components/schemas/UserDTO'
  *                     token:
  *                       type: string
  *                       example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
@@ -61,7 +61,7 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: ValidationError
@@ -71,7 +71,7 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Conflict
@@ -181,7 +181,7 @@ router.post('/register', async (req, res) => {
  *                   type: object
  *                   properties:
  *                     user:
- *                       $ref: '#/components/schemas/User'
+ *                       $ref: '#/components/schemas/UserDTO'
  *                     token:
  *                       type: string
  *                       example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
@@ -190,7 +190,7 @@ router.post('/register', async (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Unauthorized
@@ -200,7 +200,7 @@ router.post('/register', async (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Forbidden
@@ -210,7 +210,7 @@ router.post('/register', async (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: ValidationError
@@ -369,13 +369,13 @@ router.post('/logout', (req, res) => {
  *                   type: string
  *                   example: User upgraded to premium
  *                 data:
- *                   $ref: '#/components/schemas/User'
+ *                   $ref: '#/components/schemas/UserDTO'
  *       401:
  *         description: Not authenticated
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Unauthorized
@@ -385,7 +385,7 @@ router.post('/logout', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Conflict
@@ -465,13 +465,13 @@ router.post('/upgrade', (req, res) => {
  *                   type: string
  *                   example: Downgraded to free tier
  *                 data:
- *                   $ref: '#/components/schemas/User'
+ *                   $ref: '#/components/schemas/UserDTO'
  *       401:
  *         description: Not authenticated
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Unauthorized
@@ -481,7 +481,7 @@ router.post('/upgrade', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Conflict

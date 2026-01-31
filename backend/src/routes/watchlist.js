@@ -25,13 +25,13 @@ const router = express.Router();
  *                 data:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/WatchlistItem'
+ *                     $ref: '#/components/schemas/WatchlistItemDTO'
  *       401:
  *         description: Not authenticated
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Unauthorized
@@ -111,7 +111,7 @@ router.get('/', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Unauthorized
@@ -121,7 +121,7 @@ router.get('/', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: NotFound
@@ -131,7 +131,7 @@ router.get('/', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Conflict
@@ -214,7 +214,7 @@ router.post('/:movieId', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Unauthorized
@@ -224,7 +224,7 @@ router.post('/:movieId', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: NotFound

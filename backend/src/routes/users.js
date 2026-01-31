@@ -26,13 +26,13 @@ const router = express.Router();
  *                 data:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/User'
+ *                     $ref: '#/components/schemas/UserDTO'
  *       403:
  *         description: Admin access required
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Forbidden
@@ -88,13 +88,13 @@ router.get('/', requireAdmin, (req, res) => {
  *                   type: string
  *                   example: User banned successfully
  *                 data:
- *                   $ref: '#/components/schemas/User'
+ *                   $ref: '#/components/schemas/UserDTO'
  *       400:
  *         description: Cannot ban admin users
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: BadRequest
@@ -104,7 +104,7 @@ router.get('/', requireAdmin, (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Forbidden
@@ -114,7 +114,7 @@ router.get('/', requireAdmin, (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: NotFound
@@ -195,13 +195,13 @@ router.put('/:id/ban', requireAdmin, (req, res) => {
  *                   type: string
  *                   example: User unbanned successfully
  *                 data:
- *                   $ref: '#/components/schemas/User'
+ *                   $ref: '#/components/schemas/UserDTO'
  *       403:
  *         description: Admin access required
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Forbidden
@@ -211,7 +211,7 @@ router.put('/:id/ban', requireAdmin, (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: NotFound
@@ -282,13 +282,13 @@ router.put('/:id/unban', requireAdmin, (req, res) => {
  *                   type: string
  *                   example: User promoted to admin successfully
  *                 data:
- *                   $ref: '#/components/schemas/User'
+ *                   $ref: '#/components/schemas/UserDTO'
  *       403:
  *         description: Admin access required
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Forbidden
@@ -298,7 +298,7 @@ router.put('/:id/unban', requireAdmin, (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: NotFound
@@ -308,7 +308,7 @@ router.put('/:id/unban', requireAdmin, (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Conflict
@@ -387,13 +387,13 @@ router.put('/:id/promote', requireAdmin, (req, res) => {
  *                   type: string
  *                   example: User demoted to regular user
  *                 data:
- *                   $ref: '#/components/schemas/User'
+ *                   $ref: '#/components/schemas/UserDTO'
  *       403:
  *         description: Admin access required
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Forbidden
@@ -403,7 +403,7 @@ router.put('/:id/promote', requireAdmin, (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: NotFound
@@ -413,7 +413,7 @@ router.put('/:id/promote', requireAdmin, (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Conflict

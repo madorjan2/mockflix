@@ -51,7 +51,7 @@ const swaggerOptions = {
         }
       },
       schemas: {
-        User: {
+        UserDTO: {
           type: 'object',
           properties: {
             id: { type: 'integer', example: 1 },
@@ -63,7 +63,7 @@ const swaggerOptions = {
             created_at: { type: 'string', format: 'date-time', example: '2024-01-15T10:30:00Z' }
           }
         },
-        Movie: {
+        MovieDTO: {
           type: 'object',
           properties: {
             id: { type: 'integer', example: 1 },
@@ -77,7 +77,7 @@ const swaggerOptions = {
             youtube_video_id: { type: 'string', example: 'dQw4w9WgXcQ' }
           }
         },
-        Review: {
+        ReviewDTO: {
           type: 'object',
           properties: {
             id: { type: 'integer', example: 1 },
@@ -90,7 +90,7 @@ const swaggerOptions = {
             username: { type: 'string', example: 'johndoe' }
           }
         },
-        WatchlistItem: {
+        WatchlistItemDTO: {
           type: 'object',
           properties: {
             id: { type: 'integer', example: 1 },
@@ -102,7 +102,7 @@ const swaggerOptions = {
             rating: { type: 'number', format: 'float', example: 8.4 }
           }
         },
-        HistoryItem: {
+        HistoryItemDTO: {
           type: 'object',
           properties: {
             id: { type: 'integer', example: 1 },
@@ -115,7 +115,7 @@ const swaggerOptions = {
             poster_url: { type: 'string', example: 'https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg' }
           }
         },
-        SuccessResponse: {
+        SuccessResponseDTO: {
           type: 'object',
           properties: {
             success: { type: 'boolean', example: true },
@@ -123,7 +123,7 @@ const swaggerOptions = {
             data: { type: 'object' }
           }
         },
-        ErrorResponse: {
+        ErrorResponseDTO: {
           type: 'object',
           properties: {
             success: { type: 'boolean', example: false },

@@ -30,13 +30,13 @@ const router = express.Router();
  *                 data:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Review'
+ *                     $ref: '#/components/schemas/ReviewDTO'
  *       404:
  *         description: Movie not found
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: NotFound
@@ -127,13 +127,13 @@ router.get('/:id/reviews', (req, res) => {
  *                   type: string
  *                   example: Review created successfully
  *                 data:
- *                   $ref: '#/components/schemas/Review'
+ *                   $ref: '#/components/schemas/ReviewDTO'
  *       400:
  *         description: Validation error
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: ValidationError
@@ -143,7 +143,7 @@ router.get('/:id/reviews', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Unauthorized
@@ -153,7 +153,7 @@ router.get('/:id/reviews', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: NotFound
@@ -163,7 +163,7 @@ router.get('/:id/reviews', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Conflict
@@ -283,13 +283,13 @@ router.post('/:id/reviews', (req, res) => {
  *                   type: string
  *                   example: Review updated successfully
  *                 data:
- *                   $ref: '#/components/schemas/Review'
+ *                   $ref: '#/components/schemas/ReviewDTO'
  *       400:
  *         description: Validation error
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: ValidationError
@@ -299,7 +299,7 @@ router.post('/:id/reviews', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Unauthorized
@@ -309,7 +309,7 @@ router.post('/:id/reviews', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Forbidden
@@ -319,7 +319,7 @@ router.post('/:id/reviews', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: NotFound
@@ -424,7 +424,7 @@ router.put('/:id', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Unauthorized
@@ -434,7 +434,7 @@ router.put('/:id', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: Forbidden
@@ -444,7 +444,7 @@ router.put('/:id', (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               $ref: '#/components/schemas/ErrorResponseDTO'
  *             example:
  *               success: false
  *               error: NotFound
