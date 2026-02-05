@@ -1,6 +1,12 @@
 # MockFlix - Streaming Platform Test Automation App
 
-A dummy streaming platform (Netflix-style) built for showcasing automation testing scenarios. Features a complete REST API with Swagger documentation and a React frontend.
+A dummy streaming platform (Netflix/IMDb-style) built specifically for showcasing automation testing scenarios. Features a complete REST API with interactive Swagger documentation and a modern React frontend. Designed to be test-friendly with comprehensive endpoints, diverse HTTP status codes, and explicit test attributes throughout the UI.
+
+**Perfect for learning and demonstrating:**
+- API test automation (REST, authentication, CRUD operations)
+- UI test automation (E2E testing with Playwright, Selenium, Cypress)
+- Manual testing scenarios
+- Test framework development and examples
 
 ## Tech Stack
 
@@ -93,12 +99,14 @@ mockflix/
 ├── backend/
 │   ├── src/
 │   │   ├── routes/           # API endpoints
-│   │   │   ├── auth.js       # Authentication
-│   │   │   ├── movies.js     # Movie catalog
-│   │   │   ├── reviews.js    # Reviews & ratings
-│   │   │   ├── watchlist.js  # Watchlist management
-│   │   │   ├── history.js    # Watch history
-│   │   │   └── test.js       # Network simulation
+│   │   │   ├── auth.js       # Authentication (6 endpoints)
+│   │   │   ├── movies.js     # Movie catalog (8 endpoints)
+│   │   │   ├── reviews.js    # Reviews & ratings (4 endpoints)
+│   │   │   ├── watchlist.js  # Watchlist management (3 endpoints)
+│   │   │   ├── history.js    # Watch history (3 endpoints)
+│   │   │   ├── seed.js       # Database reset (3 endpoints)
+│   │   │   ├── test.js       # Network simulation (4 endpoints)
+│   │   │   └── users.js      # User management (5 endpoints)
 │   │   ├── middleware/       # Express middleware
 │   │   │   ├── auth.js       # JWT authentication
 │   │   │   ├── errorHandler.js
@@ -116,30 +124,35 @@ mockflix/
 │
 ├── frontend/                # React app
 │   ├── src/
-│   │   ├── components/      # Reusable components
-│   │   │   ├── MovieCard.jsx
-│   │   │   ├── MovieGrid.jsx
-│   │   │   ├── SearchBar.jsx
-│   │   │   ├── FilterPanel.jsx
-│   │   │   ├── Navbar.jsx
-│   │   │   └── PrivateRoute.jsx
-│   │   ├── pages/          # Route pages
-│   │   │   ├── Home.jsx
-│   │   │   ├── MovieDetails.jsx
-│   │   │   ├── Watch.jsx
-│   │   │   ├── Login.jsx
-│   │   │   ├── Register.jsx
-│   │   │   └── Profile.jsx
+│   │   ├── components/      # Reusable components (5 files)
+│   │   │   ├── FilterPanel.jsx & .css
+│   │   │   ├── MovieCard.jsx & .css
+│   │   │   ├── MovieGrid.jsx & .css
+│   │   │   ├── Navbar.jsx & .css
+│   │   │   └── SearchBar.jsx & .css
+│   │   ├── pages/          # Route pages (8 files)
+│   │   │   ├── AdminDashboard.jsx & .css
+│   │   │   ├── Home.jsx & .css
+│   │   │   ├── MovieDetails.jsx & .css
+│   │   │   ├── Profile.jsx & .css
+│   │   │   ├── Watch.jsx & .css
+│   │   │   ├── Login.jsx (uses Auth.css)
+│   │   │   └── Register.jsx (uses Auth.css)
 │   │   ├── context/        # React context
 │   │   │   └── AuthContext.jsx
 │   │   ├── utils/          # Utilities
-│   │   │   └── api.js
-│   │   └── App.jsx
+│   │   │   └── api.js      # Centralized API client
+│   │   ├── App.jsx         # Main app component
+│   │   ├── main.jsx        # React entry point
+│   │   └── index.css       # Global styles
 │   ├── index.html
+│   ├── vite.config.js
 │   └── package.json
 │
-├── copilot-instructions.md  # Project guidelines
-└── README.md
+├── copilot-instructions.md  # Project guidelines & Copilot context
+├── README.md                # This file
+├── start.bat                # Windows quick start script
+└── start.sh                 # Linux/Mac quick start script
 ```
 
 ## API Overview
@@ -201,56 +214,67 @@ mockflix/
 ## Sample Data
 
 ### Test Accounts
-```
-test@example.com / password123 (Free, User)
-admin@example.com / admin123 (Premium, Admin)
-premium@example.com / premium123 (Premium, User)
-john.doe@example.com / john123 (Free, User)
-jane.smith@example.com / jane123 (Premium, User)
-```
+
+The database is seeded with 5 test accounts:
+
+| Email | Password | Role | Subscription | Use Case |
+|-------|----------|------|--------------|----------|
+| test@example.com | password123 | user | free | Basic user testing |
+| admin@example.com | admin123 | admin | premium | Admin dashboard access |
+| premium@example.com | premium123 | user | premium | Premium features testing |
+| john.doe@example.com | john123 | user | free | Multi-user scenarios |
+| jane.smith@example.com | jane123 | user | premium | Multi-user scenarios |
+
+**Admin Access:** Login with `admin@example.com` to access the full admin dashboard at `/admin`
 
 ### Movies
-- 20 popular movies seeded (Fight Club, Inception, The Godfather, etc.)
-- Complete with posters, descriptions, ratings, genres, YouTube video IDs
-- Sample reviews, watchlists, and watch history
+- **20 popular movies** seeded from TMDB data
+- Includes: Fight Club, Inception, The Godfather, The Dark Knight, Pulp Fiction, Forrest Gump, The Matrix, and more
+- Complete metadata: posters, backdrops, descriptions, ratings, genres, runtime
+- Each movie linked to YouTube trailer/clip via video ID
+- **Sample data included:**
+  - 10 user reviews across various movies
+  - 9 watchlist entries
+  - 8 watch history entries with progress tracking
 
 ## Features
 
 ### Backend
-- ✅ Full REST API with 35+ endpoints
-- ✅ JWT authentication & authorization
-- ✅ Role-based access control (user/admin)
-- ✅ Admin user management (ban/unban/promote/demote)
-- ✅ Admin movie management (add/edit/delete)
-- ✅ User banning system
-- ✅ Subscription management (upgrade/downgrade)
-- ✅ Database reset endpoints (full/users only/movies only)
-- ✅ Comprehensive error handling
-- ✅ Network simulation endpoints
-- ✅ Interactive Swagger documentation
-- ✅ Pagination and filtering
-- ✅ CRUD operations for all resources
-- ✅ Cross-platform SQLite (sql.js)
-- ⚠️ Rate limiting disabled (test automation friendly)
+- ✅ **Full REST API with 36 endpoints** across 8 route modules
+- ✅ **Interactive Swagger/OpenAPI documentation** at `/api-docs`
+- ✅ **JWT authentication & authorization** (7-day token expiry)
+- ✅ **Role-based access control** (user/admin roles)
+- ✅ **Admin user management** (ban/unban/promote/demote operations)
+- ✅ **Admin movie management** (add/edit/delete CRUD operations)
+- ✅ **Granular database reset endpoints** (full/users only/movies only)
+- ✅ **User banning system** (banned users receive 403 on login)
+- ✅ **Subscription tier management** (free/premium with mock upgrade/downgrade)
+- ✅ **Comprehensive error handling** with consistent response formats
+- ✅ **Network simulation endpoints** for testing edge cases
+- ✅ **Pagination and filtering** on movie listings
+- ✅ **CRUD operations** for all resources (movies, reviews, watchlist, history)
+- ✅ **Cross-platform SQLite** using sql.js (no native dependencies)
+- ✅ **Health check endpoint** at `/health`
+- ⚠️ **Rate limiting disabled** (code available but commented out for test automation)
 
 ### Frontend
-- ✅ Browse and search movies
-- ✅ Filter by genre, year, rating
-- ✅ User reviews and ratings
-- ✅ Watchlist management
-- ✅ Watch history tracking
-- ✅ YouTube video player integration
-- ✅ User authentication UI (login/register)
-- ✅ Profile page with subscription management
-- ✅ Premium tier indicators and badges
-- ✅ Admin dashboard with three reset options:
-  - Reset Users Only (preserves movies)
-  - Reset Movies Only (preserves users)
-  - Reset All (full database reset)
-- ✅ Admin user management table (ban/unban/promote/demote)
-- ✅ Admin movie management table (view/add/delete)
-- ✅ Role-based UI (admin-only sections)
-- ✅ Test-friendly attributes (data-testid, aria-labels)
+- ✅ **Browse and search movies** with real-time filtering
+- ✅ **Multi-criteria filters** (genre, year, rating)
+- ✅ **User reviews and ratings** with CRUD operations
+- ✅ **Watchlist management** with add/remove functionality
+- ✅ **Watch history tracking** with progress persistence
+- ✅ **YouTube video player** integration (iframe embeds)
+- ✅ **Authentication UI** (login/register with validation)
+- ✅ **Profile page** with subscription tier management
+- ✅ **Premium tier indicators** (badges, stars, shimmer effects)
+- ✅ **Admin dashboard** with dual-tab interface:
+  - **Users tab**: View all users, ban/unban, promote/demote, reset users, reset all
+  - **Movies tab**: View all movies, add new, delete existing, reset movies, reset all
+- ✅ **Role-based UI** (admin-only navigation and routes)
+- ✅ **Test-friendly attributes** (data-testid, aria-labels, semantic HTML)
+- ✅ **Modal dialogs** for subscriptions and admin actions
+- ✅ **Protected routes** with authentication guards
+- ✅ **Responsive design** with CSS modules
 
 ## Testing Features
 
@@ -302,15 +326,41 @@ The backend uses Node's `--watch` flag for automatic restarts during development
 
 ## Architecture Notes
 
-- **sql.js** used for cross-platform compatibility (no native build tools required on Windows)
-- **bcryptjs** instead of bcrypt for same reason
-- **JWT tokens** expire after 7 days, include user role
-- **Rate limiting** disabled for test automation (code available but commented out)
-- **Database** is saved to disk automatically after modifications
-- **Swagger** annotations embedded in route files
-- **Subscription tiers** are 'free' and 'premium' (mock upgrade/downgrade, no real payments)
-- **User roles** are 'user' and 'admin' (role-based access control)
-- **Admin features** include user management (ban/unban/promote) and movie CRUD operations
+### Backend Architecture
+- **sql.js** used for cross-platform SQLite compatibility (pure JavaScript, no native build tools required on Windows)
+- **bcryptjs** instead of bcrypt (same reason - works everywhere without compilation)
+- **JWT tokens** expire after 7 days, stored in localStorage, include user role and subscription tier
+- **Rate limiting** code exists in middleware but is disabled by default for test automation
+- **Database** auto-saves to disk (`backend/database.db`) after modifications
+- **Swagger** documentation auto-generated from JSDoc annotations in route files
+- **Consistent API responses**:
+  - Success: `{ success: true, data: {...}, message: "..." }`
+  - Error: `{ success: false, error: "ErrorType", message: "...", details: {...} }`
+
+### Frontend Architecture
+- **React 18** with modern hooks (useState, useEffect, useContext)
+- **Vite** for fast development with HMR (Hot Module Replacement)
+- **React Router v6** for client-side routing with protected routes
+- **AuthContext** for centralized authentication state management
+- **Centralized API client** (`utils/api.js`) with automatic JWT token injection
+- **CSS Modules** for component-scoped styling
+- **No state management library** needed (Context API sufficient for this scope)
+
+### Security & Authorization
+- **Subscription tiers:** 'free' and 'premium' (mock upgrade/downgrade, no real payment processing)
+- **User roles:** 'user' and 'admin' (enforced via middleware and UI guards)
+- **Admin restrictions:**
+  - Admins cannot be banned
+  - Admins cannot demote themselves
+  - All admin endpoints require `authenticateToken` → `requireAdmin` middleware chain
+- **Banned users** receive 403 Forbidden response on login attempts
+
+### Database Schema
+- **5 tables:** users, movies, reviews, watchlist, watch_history
+- **Foreign keys** with CASCADE delete for data integrity
+- **Unique constraints** on user-movie relationships (one review per user per movie)
+- **Indexes** on commonly queried fields (user_id, movie_id, rating, release_year)
+- **JSON storage** for movie genres (stored as TEXT, parsed as arrays in API)
 
 ## HTTP Status Codes
 

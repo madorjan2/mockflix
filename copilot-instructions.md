@@ -31,8 +31,8 @@ This is a dummy streaming platform application (similar to Netflix/IMDb) built s
 
 ### Data Source
 - **TMDB API** for movie metadata (titles, posters, descriptions, ratings)
-- Seed 100-200 movies locally as JSON
-- Map each movie to a YouTube video (can reuse same videos)
+- Seed 20 movies locally as JSON (real movie data from popular films)
+- Map each movie to a YouTube video (trailers/clips)
 
 ## Application Features
 
@@ -236,10 +236,10 @@ This is a dummy streaming platform application (similar to Netflix/IMDb) built s
 ### Database Schema Suggestions
 
 **Users Table**:
-- id, email, password_hash, username, created_at, subscription_tier, role, is_banned
+- id, email, password_hash, username, subscription_tier, role, is_banned, created_at
 
 **Movies Table**:
-- id, tmdb_id, title, description, poster_url, release_year, rating, genres, youtube_video_id
+- id, tmdb_id, title, description, poster_url, backdrop_url, release_year, rating, vote_count, genres (JSON), runtime, youtube_video_id, created_at
 
 **Reviews Table**:
 - id, user_id, movie_id, rating, review_text, created_at, updated_at
@@ -253,52 +253,65 @@ This is a dummy streaming platform application (similar to Netflix/IMDb) built s
 ## Project Structure Suggestion
 
 ```
-streaming-platform/
+mockflix/
 ├── backend/
 │   ├── src/
-│   │   ├── routes/
-│   │   │   ├── auth.js
-│   │   │   ├── movies.js
-│   │   │   ├── reviews.js
-│   │   │   ├── watchlist.js
-│   │   │   └── test.js (network simulation)
+│   │   ├── routes/              # 8 route files, 36 total endpoints
+│   │   │   ├── auth.js          # Authentication (6 endpoints)
+│   │   │   ├── movies.js        # Movie catalog (8 endpoints)
+│   │   │   ├── reviews.js       # Reviews & ratings (4 endpoints)
+│   │   │   ├── watchlist.js     # Watchlist management (3 endpoints)
+│   │   │   ├── history.js       # Watch history (3 endpoints)
+│   │   │   ├── seed.js          # Database reset (3 endpoints)
+│   │   │   ├── test.js          # Network simulation (4 endpoints)
+│   │   │   └── users.js         # User management (5 endpoints)
 │   │   ├── middleware/
-│   │   │   ├── auth.js
-│   │   │   ├── errorHandler.js
-│   │   │   └── rateLimit.js
+│   │   │   ├── auth.js          # JWT verification & role checks
+│   │   │   ├── errorHandler.js  # Global error handling
+│   │   │   └── rateLimit.js     # Rate limiting (disabled by default)
 │   │   ├── db/
-│   │   │   ├── schema.sql
-│   │   │   ├── seed.js
-│   │   │   └── connection.js
-│   │   └── server.js
+│   │   │   ├── schema.sql       # Database schema
+│   │   │   ├── seed.js          # Data seeding script
+│   │   │   └── connection.js    # sql.js wrapper
+│   │   └── server.js            # Main Express server + Swagger setup
 │   ├── data/
-│   │   └── movies.json (seeded TMDB data)
-│   ├── database.db (SQLite file)
+│   │   └── movies.json          # 20 movies from TMDB
+│   ├── database.db              # SQLite database file (auto-generated)
+│   ├── .env                     # Environment variables
 │   └── package.json
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── components/
-│   │   │   ├── MovieCard.jsx
-│   │   │   ├── MovieGrid.jsx
-│   │   │   ├── SearchBar.jsx
-│   │   │   ├── FilterPanel.jsx
-│   │   │   └── VideoPlayer.jsx
-│   │   ├── pages/
-│   │   │   ├── Home.jsx
-│   │   │   ├── MovieDetails.jsx
-│   │   │   ├── Watch.jsx
-│   │   │   ├── Login.jsx
-│   │   │   └── Profile.jsx
-│   │   ├── hooks/
+│   │   ├── components/          # 5 reusable components
+│   │   │   ├── FilterPanel.jsx & .css
+│   │   │   ├── MovieCard.jsx & .css
+│   │   │   ├── MovieGrid.jsx & .css
+│   │   │   ├── Navbar.jsx & .css
+│   │   │   └── SearchBar.jsx & .css
+│   │   ├── pages/               # 8 page components
+│   │   │   ├── AdminDashboard.jsx & .css  # Admin-only page
+│   │   │   ├── Home.jsx & .css
+│   │   │   ├── MovieDetails.jsx & .css
+│   │   │   ├── Profile.jsx & .css
+│   │   │   ├── Watch.jsx & .css
+│   │   │   ├── Login.jsx        # Uses Auth.css
+│   │   │   ├── Register.jsx     # Uses Auth.css
+│   │   │   └── Auth.css         # Shared auth page styles
+│   │   ├── context/
+│   │   │   └── AuthContext.jsx  # Global auth state
 │   │   ├── utils/
-│   │   └── App.jsx
+│   │   │   └── api.js           # Centralized API client
+│   │   ├── App.jsx              # Main app with routing
+│   │   ├── main.jsx             # React entry point
+│   │   └── index.css            # Global styles
+│   ├── index.html
+│   ├── vite.config.js
 │   └── package.json
 │
-├── scripts/
-│   └── seed-tmdb-data.js (one-time TMDB fetch)
-│
-└── README.md
+├── copilot-instructions.md      # Project guidelines & Copilot context
+├── README.md                    # Main documentation
+├── start.bat                    # Windows quick start
+└── start.sh                     # Linux/Mac quick start
 ```
 
 ## Implementation Status
@@ -306,48 +319,51 @@ streaming-platform/
 ### ✅ Completed: Full-Stack Application with Admin Dashboard
 
 **Backend:**
-- Full REST API with 40+ endpoints
-- JWT authentication and authorization
+- Full REST API with 36 endpoints organized across 8 route files
+- JWT authentication and authorization (7-day token expiry)
 - Role-based access control (user/admin)
 - Admin endpoints for user management (ban/unban/promote/demote)
 - Admin endpoints for movie CRUD operations
 - Database reset endpoints (full/users only/movies only)
-- User banning system (403 on login)
-- SQLite database with sql.js (cross-platform)
-- Database seeding with sample data (5 users, 20 movies)
-- Error handling and network simulation endpoints
-- Rate limiting code available but disabled (test-friendly)
-- Subscription tier management (upgrade/downgrade)
-- **Swagger documentation at http://localhost:3000/api-docs**
+- User banning system (403 on login for banned users)
+- SQLite database with sql.js (pure JavaScript, cross-platform)
+- Database seeding with sample data (5 test users, 20 popular movies)
+- Error handling and network simulation endpoints for testing
+- Rate limiting code available but disabled by default (test-friendly)
+- Subscription tier management (mock upgrade/downgrade)
+- **Interactive Swagger/OpenAPI documentation at http://localhost:3000/api-docs**
+- Health check endpoint at http://localhost:3000/health
 
 **Frontend:**
-- React 18 application with Vite
-- 30+ component and page files
-- Complete integration with backend API
-- User authentication flow (login/register)
-- Movie browsing, search, and filtering
-- Movie details with reviews and ratings
-- YouTube video player integration (/watch route)
-- Watchlist and watch history
-- Profile page with subscription management
-- **Admin dashboard** (`/admin` route) with:
+- React 18 application with Vite build tool
+- 15 component and page files (8 pages, 5 components, 2 utility files)
+- Complete integration with backend API via centralized API client
+- User authentication flow (login/register with validation)
+- Movie browsing with grid layout, search, and multi-filter support
+- Movie details page with reviews, ratings, and watchlist integration
+- YouTube video player integration (dedicated /watch/:id route with iframe embed)
+- Watchlist management (add/remove with visual feedback)
+- Watch history tracking with progress persistence
+- Profile page with subscription tier management (upgrade/downgrade modals)
+- **Admin dashboard** (`/admin` route, admin-only access) with tabs:
   - User Management tab:
-    - Table showing all users with role, subscription, status
-    - Ban/Unban buttons (cannot ban admins)
-    - Promote/Demote buttons (cannot demote self)
-    - Reset Users button (resets to 5 defaults)
-    - Reset All button (full database reset)
+    - Table displaying all users (email, username, role, subscription, banned status)
+    - Ban/Unban buttons (admins cannot be banned)
+    - Promote/Demote buttons (cannot demote yourself)
+    - Reset Users button (resets to 5 default accounts, preserves movies)
+    - Reset All button (full database reset with confirmation)
   - Movie Management tab:
-    - Table showing all movies with posters, details
-    - Add Movie modal with complete form
-    - Delete Movie button for each movie
-    - Reset Movies button (resets to 20 defaults)
-    - Reset All button (full database reset)
-- Role-based UI rendering (admin-only sections)
-- Premium tier indicators (badges, stars, shimmer effects)
-- Modal dialogs for subscription and admin actions
-- Test-friendly attributes throughout (data-testid, aria-labels)
-- AuthContext for state management
+    - Table showing all movies (poster, title, year, rating, genres)
+    - Add Movie modal with validation (title, description, URLs, year, rating, genres, runtime, YouTube ID)
+    - Delete Movie button for each entry
+    - Reset Movies button (resets to 20 default movies, preserves users)
+    - Reset All button (full database reset with confirmation)
+- Role-based UI rendering (admin nav link, protected routes)
+- Premium tier visual indicators (gold badges, star icons, shimmer animations)
+- Modal dialogs for subscriptions, movie operations, and destructive actions
+- Test-friendly attributes throughout (data-testid, aria-labels, semantic HTML)
+- AuthContext for centralized authentication state management
+- React Router for client-side navigation with protected routes
 
 ## Setup Instructions
 
@@ -360,37 +376,64 @@ streaming-platform/
 
 ## Test Accounts
 
-- **Free User**: test@example.com / password123
-- **Admin**: admin@example.com / admin123 (premium tier)
-- **Premium User**: premium@example.com / premium123
-- **Free User**: john.doe@example.com / john123
-- **Premium User**: jane.smith@example.com / jane123
+The database is seeded with 5 test accounts covering different roles and subscription tiers:
 
-The admin account has full access to the admin dashboard for user management and movie operations!
+| Email | Password | Role | Subscription | Notes |
+|-------|----------|------|--------------|-------|
+| test@example.com | password123 | user | free | Standard test user |
+| admin@example.com | admin123 | admin | premium | Full admin access to dashboard |
+| premium@example.com | premium123 | user | premium | Premium user for tier testing |
+| john.doe@example.com | john123 | user | free | Additional test user |
+| jane.smith@example.com | jane123 | user | premium | Additional premium user |
+
+The admin account (admin@example.com) has full access to:
+- User management (ban/unban/promote/demote)
+- Movie CRUD operations (add/edit/delete)
+- Database reset operations (users/movies/all)
 
 ## Additional Notes
 
-- Using **sql.js** (pure JavaScript SQLite) for cross-platform compatibility - no native build tools required on Windows
-- Using **bcryptjs** instead of bcrypt for the same reason - works everywhere without compilation
-- **Rate limiting is DISABLED** by default - inappropriate for test automation. Code exists in middleware but is commented out in server.js
-- Backend returns **genres as arrays** (parsed from JSON in database) - frontend expects arrays, not CSV strings
-- **AuthContext** manages user state across the React app
-- **JWT tokens** stored in localStorage, included in Authorization headers, contain user role
-- **Reviews endpoint** returns 401 when not authenticated - frontend handles this gracefully
-- **Subscription management** is fully functional but mock (no real payments)
-- **Admin role** system with requireAdmin middleware - admins cannot be banned
-- **User banning** prevents login (403 Forbidden response)
-- **Admin dashboard** accessible at /admin route - shows user and movie management tables
-- **Database reset functionality** with three options:
-  - POST /api/seed/reset - Full reset (runs complete seed script)
-  - POST /api/seed/reset-users - Users only (preserves movies)
-  - POST /api/seed/reset-movies - Movies only (preserves users)
-- All components include **data-testid** attributes for automation testing
-- **Premium indicators** appear in navbar and profile page (gold badges, stars, shimmer animations)
-- Sample users in seed data span both free/premium tiers and user/admin roles
-- Database automatically resets when running `npm run seed`
-- **Admin authentication chain**: authenticateToken → requireAdmin → endpoint handler
-- Movie creation defaults to rating 0 if not specified (will appear at bottom when sorted by rating)
+### Technical Implementation Details
+- Using **sql.js** (pure JavaScript SQLite) for cross-platform compatibility - no native build tools or C++ compilation required on Windows
+- Using **bcryptjs** instead of bcrypt for the same reason - works everywhere without native dependencies
+- **Rate limiting is DISABLED** by default in server.js - code exists in middleware but commented out for test automation friendliness
+- Backend stores genres as JSON strings in SQLite, parses to arrays in API responses - frontend expects arrays
+- Database file persists at `backend/database.db` and auto-saves after modifications
+
+### Authentication & Authorization
+- **AuthContext** manages user state across the React application
+- **JWT tokens** are:
+  - Stored in localStorage (`mockflix_token`)
+  - Valid for 7 days from creation
+  - Included in Authorization headers as `Bearer <token>`
+  - Contain user ID, email, role, and subscription tier
+- **Reviews endpoint** returns 401 when not authenticated - frontend gracefully handles by showing login prompt
+- **Admin authentication chain**: authenticateToken middleware → requireAdmin middleware → endpoint handler
+- Admins cannot be banned (business logic validation)
+- Cannot demote yourself as admin (prevents lockout)
+
+### Subscription & User Management
+- **Subscription management** is fully functional but mock (no Stripe/payment integration)
+- **User banning system**: Banned users receive 403 Forbidden on login attempts
+- **Admin dashboard** accessible at /admin route (redirects non-admins to home)
+- **Database reset functionality** with three granular options:
+  - `POST /api/seed/reset` - Full reset (drops all tables, recreates schema, seeds everything)
+  - `POST /api/seed/reset-users` - Users only (preserves all movies and their data)
+  - `POST /api/seed/reset-movies` - Movies only (preserves all users and their data)
+- Running `npm run seed` manually performs full database reset
+
+### Frontend Implementation
+- All interactive components include **data-testid** attributes for E2E test automation
+- **Premium indicators** appear in navbar and profile page (gold/yellow badges, star icons, shimmer CSS animations)
+- Sample users in seed data cover both free/premium tiers and user/admin roles
+- Protected routes redirect unauthenticated users to login page
+- Movie creation via admin panel defaults to rating 0 if not specified
+
+### API Design
+- Consistent response format: `{ success: boolean, data: any, message: string }`
+- Error responses include: `{ success: false, error: string, message: string, details?: any }`
+- Swagger documentation auto-generated from JSDoc comments in route files
+- All endpoints return appropriate HTTP status codes (200, 201, 204, 400, 401, 403, 404, 409, 422, 429, 500, 503)
 
 ## What NOT to Do
 
