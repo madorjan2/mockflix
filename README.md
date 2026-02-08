@@ -1,5 +1,8 @@
 # MockFlix - Streaming Platform Test Automation App
 
+> [!WARNING]
+> This app is 100% vibe coded, I have literally added 0 lines to it manually.
+
 A dummy streaming platform (Netflix/IMDb-style) built specifically for showcasing automation testing scenarios. Features a complete REST API with interactive Swagger documentation and a modern React frontend. Designed to be test-friendly with comprehensive endpoints, diverse HTTP status codes, and explicit test attributes throughout the UI.
 
 **Perfect for learning and demonstrating:**
