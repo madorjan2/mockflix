@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
-import { initDatabase, run, closeDatabase, getDatabase } from './connection.js';
+import { initDatabase, run, closeDatabase, getDatabase, saveDatabase } from './connection.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -30,6 +30,10 @@ async function seed() {
     const schemaPath = path.join(__dirname, 'schema.sql');
     const schema = fs.readFileSync(schemaPath, 'utf8');
     db.exec(schema);
+    
+    // Save after schema creation (db.exec doesn't auto-save)
+    saveDatabase();
+    console.log('✅ Schema created and saved to disk');
 
     // Seed users
     console.log('👤 Seeding users...');
