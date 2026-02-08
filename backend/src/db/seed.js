@@ -196,7 +196,8 @@ async function seed() {
 }
 
 // Run if called directly
-if (import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}`) {
+const isMainModule = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
+if (isMainModule) {
   seed();
 }
 
